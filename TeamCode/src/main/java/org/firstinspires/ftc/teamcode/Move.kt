@@ -43,7 +43,10 @@ class Move(private val hardwareMap: HardwareMap) {
             
         }
     }
-
+    
+    /**
+     * Immediately stop all motion of the robot
+     */
     fun stop() {
         setPowerOnAll(0.0)
     }
