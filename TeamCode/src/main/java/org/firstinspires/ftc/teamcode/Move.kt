@@ -20,12 +20,12 @@ class Move(private val hardwareMap: HardwareMap) {
     /**
      * Starts moving the robot straight
      *
-     * The [power] parameter controls the speed **and** direction of the motion. If power
+     * The [power] parameter controls the speed **and** direction of the motion. If [power]
      * is positive then the robot will move forward, if negative it will move backward
      *
      * If either or both of the optional parameters [forSeconds] and [forMilliseconds]
      * is provided, then the motors will run forward for the specified duration and then
-     * stop. Note that both of these variables must be positive integers.
+     * stop. Note that both of these variables must be positive integers, 0 or null
      *
      * @param power desired power of the motor as a double between -1.0 and 1.0
      * @param forSeconds how long the robot should move before stopping in seconds
