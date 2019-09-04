@@ -12,10 +12,10 @@ class Move(private val hardwareMap: HardwareMap) {
 
     /// Declare and initialize variables containing references to the four movement motors
     /// that should be used throughout the class
-    private val frontLeftMotor: DcMotor = hardwareMap.get(DcMotor::class.java, "frontLeftMotor")
-    private val frontRightMotor: DcMotor = hardwareMap.get(DcMotor::class.java, "frontRightMotor")
-    private val backLeftMotor: DcMotor = hardwareMap.get(DcMotor::class.java, "backLeftMotor")
-    private val backRightMotor: DcMotor = hardwareMap.get(DcMotor::class.java, "backRightMotor")
+    private val frontLeftMotor: DcMotor = hardwareMap.dcMotor.get("frontLeftMotor")
+    private val frontRightMotor: DcMotor = hardwareMap.dcMotor.get("frontRightMotor")
+    private val backLeftMotor: DcMotor = hardwareMap.dcMotor.get("backLeftMotor")
+    private val backRightMotor: DcMotor = hardwareMap.dcMotor.get("backRightMotor")
 
     /**
      * Starts moving the robot straight
@@ -23,8 +23,20 @@ class Move(private val hardwareMap: HardwareMap) {
      * The [power] parameter controls the speed **and** direction of the motion. If [power]
      * is positive then the robot will move forward, if negative it will move backward
      *
-     * If either or both of the optional parameters [forSeconds] and [forMilliseconds]
-     * is provided, then the motors will run forward for the specified duration and then
+     * @param power desired power of the motor as a double between -1.0 and 1.0
+     */
+    fun straight(power: Double) {
+        setPowerOnAll(power)
+    }
+
+    /**
+     * Starts moving the robot straight
+     *
+     * The [power] parameter controls the speed **and** direction of the motion. If [power]
+     * is positive then the robot will move forward, if negative it will move backward
+     *
+     * Either or both of the optional parameters [forSeconds] and [forMilliseconds]
+     * can be provided. The motors will run forward for the specified duration and then
      * stop. Note that both of these variables must be positive integers, 0 or null
      *
      * @param power desired power of the motor as a double between -1.0 and 1.0
@@ -33,17 +45,23 @@ class Move(private val hardwareMap: HardwareMap) {
      */
     fun straight(power: Double, forSeconds: Int? = null, forMilliseconds: Int? = null) {
 
-        setPowerOnAll(power)
-
-        if (forMilliseconds != null || forSeconds != null) {
-            
-            val sleepMillis: Int = (forMilliseconds?:0) + ((forSeconds?:0) * 1000)
-            Thread.sleep(sleepMillis.toLong())
-            stop()
-            
+        assert(forSeconds != null || forMilliseconds != null) {
+            "Used time-limited straight move when simple power function should have been used"
         }
+        assert(!(forSeconds == 0 && forMilliseconds == 0)) {
+            "Invalid time. Cannot run for 0ms"
+        }
+        assert(!((forSeconds?:0) < 0 && (forMilliseconds?:0) < 0)) {
+            "Invalid time. Cannot use negative time"
+        }
+
+        straight(power)
+
+        val sleepMillis: Int = (forMilliseconds?:0) + ((forSeconds?:0) * 1000)
+        Thread.sleep(sleepMillis.toLong())
+        stop()
     }
-    
+
     /**
      * Immediately stop all motion of the robot
      */
@@ -56,5 +74,12 @@ class Move(private val hardwareMap: HardwareMap) {
         frontRightMotor.power = power
         backLeftMotor.power = power
         backRightMotor.power = power
+    }
+
+    private fun setPowerOn(left: Double, right: Double) {
+        frontLeftMotor.power = left
+        frontRightMotor.power = right
+        backLeftMotor.power = left
+        backRightMotor.power = right
     }
 }
