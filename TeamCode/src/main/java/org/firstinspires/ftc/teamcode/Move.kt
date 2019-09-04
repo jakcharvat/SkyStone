@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.HardwareMap
 
 /**
- * A class used to control the basic movement of the robot in space
+ * A class used to control the basic movement of the robot in the 2d playing field
  *
  * @param hardwareMap A reference to the hardwareMap variable provided by LinearOpMode
  */
@@ -28,20 +28,19 @@ class Move(private val hardwareMap: HardwareMap) {
      * stop. Note that both of these variables must be positive integers.
      *
      * @param power desired power of the motor as a double between -1.0 and 1.0
-     * @param forSeconds how long the robot should move forward before stopping in seconds
-     * @param forMilliseconds how long the robot should move forward before stopping in milliseconds
+     * @param forSeconds how long the robot should move before stopping in seconds
+     * @param forMilliseconds how long the robot should move before stopping in milliseconds
      */
     fun straight(power: Double, forSeconds: Int? = null, forMilliseconds: Int? = null) {
 
         setPowerOnAll(power)
 
         if (forMilliseconds != null || forSeconds != null) {
-
+            
             val sleepMillis: Int = (forMilliseconds?:0) + ((forSeconds?:0) * 1000)
-
             Thread.sleep(sleepMillis.toLong())
-
             stop()
+            
         }
     }
 
