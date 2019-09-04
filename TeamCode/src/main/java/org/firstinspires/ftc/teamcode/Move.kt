@@ -41,8 +41,12 @@ class Move(private val hardwareMap: HardwareMap) {
 
             Thread.sleep(sleepMillis.toLong())
 
-            setPowerOnAll(0.0)
+            stop()
         }
+    }
+
+    fun stop() {
+        setPowerOnAll(0.0)
     }
 
     private fun setPowerOnAll(power: Double) {
