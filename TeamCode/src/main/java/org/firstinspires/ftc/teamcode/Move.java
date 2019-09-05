@@ -22,7 +22,7 @@ public class Move {
         left.setPower(power)
         right.setPower(power)
 
-        sleep(1000) // run for some amount of time
+        sleep(5000) // run for some amount of time
 
         power = 0;
 
@@ -43,7 +43,7 @@ public class Move {
         left.setPower(power)
         right.setPower(power)
 
-        sleep(1000) // run for some amount of time
+        sleep(5000) // run for some amount of time
 
         power = 0;
 
