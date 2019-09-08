@@ -152,7 +152,7 @@ Note, in both cases you must provide a name, but the group name is optional and 
 
 You should now upload the code to GitHub so others can look over it, give feedback, and so that it can eventually be integrated into the final product. To do this, go back to the GitHub Desktop app, where you should see all the changes you've made to all files. In the smaller box at the bottom left provide a brief title summarizing in a few (10 max) words what you did, add a description in the bigger box if you deem necessary. Once done, click the "Commit to [branch]" button, and then the "Push origin" button in the upper right. And done! :)
 
-If you are sure the feature is finished, remove the `WIP` label by clicking on "Labels" and unchecking `WIP`, and add the `testing` label on both the issue and pull request for the feature. Then, in the pull request, request a review from me by clicking on "Reviewers"
+If you are sure the feature is finished, remove the `WIP` label by clicking on "Labels" and unchecking `WIP`, and add the `test ready` label on both the issue and pull request for the feature. Then, in the pull request, request a review from me by clicking on "Reviewers"
 
 ![Reviewers](./images/review.jpg)
 
