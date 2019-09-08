@@ -1,121 +1,192 @@
-## TeamCode Module
+# <kbd>Intro</kbd>
 
-Welcome!
+I've put together this document to help guide you through the process of creating a new issue, branch and pull request in [GitHub](https://github.com), opening and editing code in [Andriod Studio](https://developer.android.com/studio), and pushing your changes back to Android Studio so we can collaborate on it, as well as to outline some basic expectations I have for the code. All of the screenshots below are from Windows, but the steps should be more less the same on macOS as well except for some repositioned UI elements here and there.
 
-This module, TeamCode, is the place where you will write/paste the code for your team's
-robot controller App. This module is currently empty (a clean slate) but the
-process for adding OpModes is straightforward.
+# <kbd>Before you start working...</kbd>
 
-## Creating your own OpModes
+Before you start writing a new feature or changing the behaviour of an existing one, please take these steps to outline what you are planning to do:
 
-The easiest way to create your own OpMode is to copy a Sample OpMode and make it your own.
+## `New Issue`
 
-Sample opmodes exist in the FtcRobotController module.
-To locate these samples, find the FtcRobotController module in the "Project/Android" tab.
+1) [Open the repo in your web browser](http://github.com/jakcharvat/SkyStone),
+and switch to the ["Issues" tab](http://github.com/jakcharvat/SkyStone/issues). ![Issues](./images/issues.jpg)
 
-Expand the following tree elements:
- FtcRobotController / java / org.firstinspires.ftc.robotcontroller / external / samples
+2) Click on "New issue"
+![New Issue](./images/new_issue.jpg)
 
-A range of different samples classes can be seen in this folder.
-The class names follow a naming convention which indicates the purpose of each class.
-The full description of this convention is found in the samples/sample_convention.md file.
+3) Fill in an appropriate and descriptive title and description (if needed)
 
-A brief synopsis of the naming convention is given here:
-The prefix of the name will be one of the following:
+4) On the right side, under "Assignees" click on "assign yourself"
+![Assign Yourself](./images/assign_yourself.jpg)
 
-* Basic:    This is a minimally functional OpMode used to illustrate the skeleton/structure
-            of a particular style of OpMode.  These are bare bones examples.
-* Sensor:   This is a Sample OpMode that shows how to use a specific sensor.
-            It is not intended as a functioning robot, it is simply showing the minimal code
-            required to read and display the sensor values.
-* Hardware: This is not an actual OpMode, but a helper class that is used to describe
-            one particular robot's hardware devices: eg: for a Pushbot.  Look at any
-            Pushbot sample to see how this can be used in an OpMode.
-            Teams can copy one of these to create their own robot definition.
-* Pushbot:  This is a Sample OpMode that uses the Pushbot robot structure as a base.
-* Concept:	This is a sample OpMode that illustrates performing a specific function or concept.
-            These may be complex, but their operation should be explained clearly in the comments,
-            or the header should reference an external doc, guide or tutorial.
-* Library:  This is a class, or set of classes used to implement some strategy.
-            These will typically NOT implement a full OpMode.  Instead they will be included
-            by an OpMode to provide some stand-alone capability.
+5) You should now see your username under the "Assignees" tab.
 
-Once you are familiar with the range of samples available, you can choose one to be the
-basis for your own robot.  In all cases, the desired sample(s) needs to be copied into
-your TeamCode module to be used.
+6) In the same column of options, click on "Labels",
+![Labels](./images/labels.jpg)
+scroll down and tick the `WIP` label
+![WIP Label](./images/wip.jpg)
 
-This is done inside Android Studio directly, using the following steps:
+7) Click anywhere outside of the dialog to close it. You should now see the  `WIP` label under the "Labels" tab. Click on "Submit new issue" to save the issue.
+![Submit new issue](./images/submit_new_issue.jpg)
 
- 1) Locate the desired sample class in the Project/Android tree.
+8) Take note of the number assigned to your issue and the URL of the issue's page
+![Issue number](./images/new_issue_created.jpg)
 
- 2) Right click on the sample class and select "Copy"
+## `New branch`
 
- 3) Expand the  TeamCode / java folder
+1) Open the GitHub desktop app. Ensure "SkyStone" is selected as the Current repository
+![Current repo](./images/current_repo.jpg)
 
- 4) Right click on the org.firstinspires.ftc.teamcode folder and select "Paste"
+2) Ensure that "Master" is selected as the Current branch. If it isn't, click on the "Current branch" selection
+![Current branch](./images/current_branch.jpg)
+and in the dropdown select "master"
+![Switching to the master branch](./images/master.jpg)
 
- 5) You will be prompted for a class name for the copy.
-    Choose something meaningful based on the purpose of this class.
-    Start with a capital letter, and remember that there may be more similar classes later.
+3) The master branch should now show up as the Current branch
+![Master branch selected](./images/master_selected.jpg)
 
-Once your copy has been created, you should prepare it for use on your robot.
-This is done by adjusting the OpMode's name, and enabling it to be displayed on the
-Driver Station's OpMode list.
+4) Click on "Fetch origin" to update your local version of the branch from the online one
+![Fetch origin](./images/fetch_origin.jpg)
 
-Each OpMode sample class begins with several lines of code like the ones shown below:
+5) Select "Branch" -> "New Branch" in the app's menu bar
+![New branch](./images/new_branch.jpg)
 
+6) Name the branch "[Your Github Username]/[Number assigned to the issue you created]" for example "jakcharvat/6" for my example. This is to ensure that we don't have duplicate branches with the same name, that our branches don't have ridiculously long names, and that we have a place to discuss stuff related to this specific feature
+![Name the branch like this](./images/branch_name.jpg)
+
+7) Open the project in android studio. To do this, click on "Repository" -> "Show in explorer" in the menu bar of GitHub Desktop ("Repository" -> "Reveal in Finder" for mac), and take note of where the project is located. Then open Android Studio, click on "File" -> "Open..." and navigate to the folder where the project is located. Open the "Team Code" project, which should show the Android Studio icon
+![Android Studio Icon](./images/team_code.jpg)
+
+8) Wait until Gradle Build finishes
+![Gradle Build Successful](./images/gradle_success.jpg)
+
+9) Expand `TeamCode -> java -> org.firstinspires.ftc.teamcode` in the "Project" tab on the left, and select `changelog.md`
+![Open changelog.md](./images/changelog_md.jpg)
+
+10) In the editor, find your username, and add the following to the end of the list there: `- [#[Issue Number]]([URL to issue])`, for example for my issue: `- [#6](https://github.com/jakcharvat/SkyStone/issues/6)`. Save the file (CTRL + S / CMD + S)
+![New changelog entry](./images/new_changelog.jpg)
+
+11) Switch back to the GitHub Desktop App, you should now see the change you made to the `changelog.md` file there. In the smaller text box in the bottom left corner type "Create changelog entry" and then click on "Commit to [your branch]"
+![Commit](./images/commit_changelog.jpg)
+
+12) Once this is finished, click on "Publish branch"
+![Publish](./images/publish_branch.jpg)
+
+## `New PR (Pull Request)``
+
+1) Return to the [repo in your web browser](https://github.com/jakcharvat/SkyStone) and switch to [the "Pull Requests" tab](https://github.com/jakcharvat/SkyStone/pulls). Select "New pull request"
+![New PR](./images/new_pr.jpg)
+
+2) Select `jakcharvat/SkyStone` as the base repository
+![Base Repo](./images/base_repo.jpg)
+
+3) Ensure `master` is selected as the base, and select your new branch as the compare branch. Then click "Create pull request"
+![Create PR](./images/create_pr.jpg)
+
+4) Change the title to match the title of the issue, and change the desription to "Resolves #[Issue number]", for example "Resolved #6". In the pop-up that appears, select your issue
+![PR Description](./images/pr_desc.jpg)
+
+5) As described in the "New Issue" section, assign the pull request to yourself and add the `WIP` label. Then click "Create pull request"
+![Self-assign, label and create](./images/pr_done.jpg)
+
+6) Return to your issue page, and add the `has pull request` label
+![Has PR](./images/has_pr.jpg)
+
+You are now ready to start working :)
+
+# <kbd>The Fun Part</kbd>
+
+You should still have Android Studio open from when you edited the changelog file. We write code in the same folder as the changelog and this readme files are located, by creating new Java classes. If you are writing a helper class that will be used in other programs then all you have to do is use the code pre-generated by Android Studio and continue building off of it.
+
+``` Java
+package org.firstinspires.ftc.teamcode;
+
+class ClassName {
+  // class content goes here
+}
 ```
- @TeleOp(name="Template: Linear OpMode", group="Linear Opmode")
- @Disabled
+
+If you are writing something that will directly control the robot however, either an autonomous or driver controlled program, there are a few modifications you need to make to this generic code. Firstly, for both, you need to extend `LinearOpMode`:
+
+``` Java
+package org.firstinspires.ftc.teamcode
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+class ClassName extends LinearOpMode {
+  // class content goes here
+}
 ```
 
-The name that will appear on the driver station's "opmode list" is defined by the code:
- ``name="Template: Linear OpMode"``
-You can change what appears between the quotes to better describe your opmode.
-The "group=" portion of the code can be used to help organize your list of OpModes.
+To make the program show on the driver phone you must make one more addition that varies slightly based on whether it is an autonomous or driver controlled class.
 
-As shown, the current OpMode will NOT appear on the driver station's OpMode list because of the
-  ``@Disabled`` annotation which has been included.
-This line can simply be deleted , or commented out, to make the OpMode visible.
+**Autonomous:**
 
+``` Java
+package org.firstinspires.ftc.teamcode
 
+@Autonomous(name = "Some Name", group = "Some Group")
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-## ADVANCED Multi-Team App management:  Cloning the TeamCode Module
+class ClassName extends LinearOpMode {
+  // class content goes here
+}
+```
 
-In some situations, you have multiple teams in your club and you want them to all share
-a common code organization, with each being able to *see* the others code but each having
-their own team module with their own code that they maintain themselves.
+**Driver Controlled:**
 
-In this situation, you might wish to clone the TeamCode module, once for each of these teams.
-Each of the clones would then appear along side each other in the Android Studio module list,
-together with the FtcRobotController module (and the original TeamCode module).
+``` Java
+package org.firstinspires.ftc.teamcode
 
-Selective Team phones can then be programmed by selecting the desired Module from the pulldown list
-prior to clicking to the green Run arrow.
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-Warning:  This is not for the inexperienced Software developer.
-You will need to be comfortable with File manipulations and managing Android Studio Modules.
-These changes are performed OUTSIDE of Android Studios, so close Android Studios before you do this.
- 
-Also.. Make a full project backup before you start this :)
+@TeleOp(name = "Some Name", group = "Some Group")
+class ClassName extends LinearOpMode {
+  // class content goes here
+}
+```
 
-To clone TeamCode, do the following:
+Note, in both cases you must provide a name, but the group name is optional and only serves the purpose of better organisation.
 
-Note: Some names start with "Team" and others start with "team".  This is intentional.
+# <kbd> Feature done, now what?</kbd>
 
-1)  Using your operating system file management tools, copy the whole "TeamCode"
-    folder to a sibling folder with a corresponding new name, eg: "Team0417".
+You should now upload the code to GitHub so others can look over it, give feedback, and so that it can eventually be integrated into the final product. To do this, go back to the GitHub Desktop app, where you should see all the changes you've made to all files. In the smaller box at the bottom left provide a brief title summarizing in a few (10 max) words what you did, add a description in the bigger box if you deem necessary. Once done, click the "Commit to [branch]" button, and then the "Push origin" button in the upper right. And done! :)
 
-2)  In the new Team0417 folder, delete the TeamCode.iml file.
+If you are sure the feature is finished, remove the `WIP` label by clicking on "Labels" and unchecking `WIP`, and add the `test ready` label on both the issue and pull request for the feature. Then, in the pull request, request a review from me by clicking on "Reviewers"
 
-3)  the new Team0417 folder, rename the "src/main/java/org/firstinspires/ftc/teamcode" folder
-    to a matching name with a lowercase 'team' eg:  "team0417".
+![Reviewers](./images/review.jpg)
 
-4)  In the new Team0417/src/main folder, edit the "AndroidManifest.xml" file, change the line that contains
-         package="org.firstinspires.ftc.teamcode"
-    to be
-         package="org.firstinspires.ftc.team0417"
+Searching for "jakcharvat" and ticking my name, like you would tick a label.
 
-5)  Add:    include ':Team0417' to the "/settings.gradle" file.
-    
-6)  Open up Android Studios and clean out any old files by using the menu to "Build/Clean Project""
+# <kbd> Expectations </kbd>
+
+There are a few things I'd like to see, and a few things I would absolutely **hate** to see. Take a look at the following screenshot:
+
+![Bad Code](./images/bad.png)
+
+There's a few things that infuriate me about this. First off, what is `mecaDrive`? Second off, those looooooong chunks of code that does stuff in seemingly sequential order, but that would take a supercomputer to read. And then all the inconsistency. Sometimes there are spaces around an = sign, sometimes not. There are comments that start, but then sort of end without doing any help (`//stop, if` what?). Those curly brackets should be on the same line as the declaration:
+``` Java
+void hello() { // Good
+  // Something
+}
+```
+Not:
+``` Java
+void hello()
+{ // Big big sad
+  // Something
+}
+```
+
+They might seem like small details, but when someone else goes over to read your code it is important it is well documented, properly styled and consistent. This can save the person going through your code hours of pain and headache trying to figure out what `void mysteriousMagicFunction()` does.
+
+As part of the review before I accept your PR to be merged into the master branch I will go over all the changes, and make sure they are readable, decently documented and consistent in formatting. I don't require Google-style code, but I will be rejecting stuff that I find messy. When I reject something I will always give specific issues I find and some ideas on how to fix them. Once you feel you have fixed them, you can request a new review from me.
+
+# <kbd> Tips </kbd>
+
+Lastly, some tips to help working with Android Studio:
+
+- You can hold CTRL (or CMD on mac) and click a variable name, method or class, which will bring you to it's declaration. This is great to see how a particular feature is implemented
+- As you are typing out a function or class name and it is suggested by Android Studio's intelliSense, you can press CTRL+Q on Windows (Unsure of the keymap for mac, sorry) to view some extra documentation of that class or method. This often includes info on what the parameters that method or class takes, what it returns and a brief summary of what it does.
+
+I will be adding more tips if someone points them out or if I remember something else I use on the daily.
