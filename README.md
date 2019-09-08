@@ -180,7 +180,9 @@ void hello()
 
 They might seem like small details, but when someone else goes over to read your code it is important it is well documented, properly styled and consistent. This can save the person going through your code hours of pain and headache trying to figure out what `void mysteriousMagicFunction()` does.
 
-As part of the review before I accept your PR to be merged into the master branch I will go over all the changes, and make sure they are readable, decently documented and consistent in formatting. I don't require Google-style code, but I will be rejecting stuff that I find messy. When I reject something I will always give specific issues I find and some ideas on how to fix them. Once you feel you have fixed them, you can request a new review from me.
+As part of the review before I accept your PR to be merged into the master branch I will go over all the changes, and make sure they are readable, decently documented and consistent in formatting. I don't require Google-style code, but I will be rejecting stuff that I find messy. When I reject something I will always give specific issues I find and some ideas on how to fix them. Once you feel you have fixed them, you can request a new review from me. Here's a quick example of what I think code should look like: 
+
+![Good Code](./TeamCode/src/main/java/org/firstinspires/ftc/teamcode/images/good.jpg)
 
 # Tips
 
