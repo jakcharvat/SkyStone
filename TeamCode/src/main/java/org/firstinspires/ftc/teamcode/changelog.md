@@ -7,7 +7,7 @@
 
 ### spiderpiggy03
 
-
+- [#16](https://github.com/jakcharvat/SkyStone/issues/16)
 
 ### nyeffA
 
