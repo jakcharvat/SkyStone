@@ -72,7 +72,7 @@ and in the dropdown select "master"
 12) Once this is finished, click on "Publish branch"
 ![Publish](./TeamCode/src/main/java/org/firstinspires/ftc/teamcode/images/publish_branch.jpg)
 
-## `New PR (Pull Request)``
+## `New PR (Pull Request)`
 
 1) Return to the [repo in your web browser](https://github.com/jakcharvat/SkyStone) and switch to [the "Pull Requests" tab](https://github.com/jakcharvat/SkyStone/pulls). Select "New pull request"
 ![New PR](./TeamCode/src/main/java/org/firstinspires/ftc/teamcode/images/new_pr.jpg)
