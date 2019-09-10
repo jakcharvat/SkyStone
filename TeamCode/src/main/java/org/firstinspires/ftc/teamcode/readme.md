@@ -118,6 +118,22 @@ class ClassName extends LinearOpMode {
 }
 ```
 
+`LinearOpMode` requires that all classes that extend it also implement the `runOpMode` void method. This is what is executed when the program is run, in linear order:
+
+``` Java
+package org.firstinspires.ftc.teamcode
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+class ClassName extends LinearOpMode {
+  
+  @override
+  public void runOpMode() {
+      // This is what runs
+  }
+  
+}
+```
 To make the program show on the driver phone you must make one more addition that varies slightly based on whether it is an autonomous or driver controlled class.
 
 **Autonomous:**
@@ -129,7 +145,12 @@ package org.firstinspires.ftc.teamcode
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 class ClassName extends LinearOpMode {
-  // class content goes here
+   
+  @override
+  public void runOpMode() {
+      // This is what runs
+  }
+  
 }
 ```
 
@@ -142,7 +163,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @TeleOp(name = "Some Name", group = "Some Group")
 class ClassName extends LinearOpMode {
-  // class content goes here
+    
+  @override
+  public void runOpMode() {
+      // This is what runs
+  }
+  
 }
 ```
 
