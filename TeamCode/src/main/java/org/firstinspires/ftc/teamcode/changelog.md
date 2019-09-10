@@ -19,6 +19,7 @@
 
 ### Beggy04
 
+- [#1](https://github.com/Beggy04/SkyStone/issues/1)
 
 
 ### DaewheeKim
