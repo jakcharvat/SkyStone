@@ -62,7 +62,8 @@ public class TfodTest extends LinearOpMode {
                         telemetry.addData("# Object Detected", updatedRecognitions.size());
 
                         for (Recognition recognition: updatedRecognitions) {
-
+                            telemetry.addData("Recognition", recognition.getLabel());
+                            telemetry.update();
                         }
 
                         if (updatedRecognitions.size() == 3) {
