@@ -30,7 +30,7 @@ public class AutonomousDemo extends LinearOpMode {
 
         /// Move forward at half power for 2 seconds and then stop
         move.straight(0.5);
-        wait(2000);
+        Thread.sleep(2000);
         move.stop();
 
         /// Move back at full power for 1 second, then stop
