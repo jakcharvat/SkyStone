@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
@@ -22,6 +23,9 @@ public class Move {
         this.rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
         this.leftBackMotor = hardwareMap.dcMotor.get("leftBackMotor");
         this.rightBackMotor = hardwareMap.dcMotor.get("rightBackMotor");
+
+        this.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     /**
@@ -52,7 +56,7 @@ public class Move {
     void straight(final double power, final int forMilliseconds) throws InterruptedException {
         straight(power);
 
-        wait(forMilliseconds);
+        Thread.sleep(forMilliseconds);
 
         stop();
     }
@@ -70,7 +74,7 @@ public class Move {
 
         power = Range.clip(power, -1.0,  0.1);
 
-        setPowerOn((power * 0.1), power);
+        setPowerOn(-power, power);
     }
 
 
@@ -105,7 +109,7 @@ public class Move {
         turnLeft(power);
 
 
-        wait(forMilliseconds);
+        Thread.sleep(forMilliseconds);
 
 
         stop();
@@ -137,7 +141,7 @@ public class Move {
         this.leftFrontMotor.setPower(left);
         this.leftBackMotor.setPower(left);
         this.rightFrontMotor.setPower(right);
-        this.leftBackMotor.setPower(right);
+        this.rightBackMotor.setPower(right);
     }
 
 }
