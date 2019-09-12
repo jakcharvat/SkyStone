@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 public class Move {
 
     /// Declare variables that will hold references to the motors
-    private DcMotor leftFrontMotor, rightFrontMotor, leftBackMotor, rightBackMotor;
+    private DcMotor leftMotor, rightMotor, leftBackMotor, rightBackMotor;
 
     /**
      * A class used to control the basic movement of the robot in the 2d playing field
@@ -19,13 +19,10 @@ public class Move {
     Move(final HardwareMap hardwareMap) {
 
         /// Initialize the motors using the [hardwareMap] passed in in the constructor
-        this.leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
-        this.rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
-        this.leftBackMotor = hardwareMap.dcMotor.get("leftBackMotor");
-        this.rightBackMotor = hardwareMap.dcMotor.get("rightBackMotor");
+        this.leftMotor = hardwareMap.dcMotor.get("leftMotor");
+        this.rightMotor = hardwareMap.dcMotor.get("rightMotor");
 
-        this.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        this.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     /**
@@ -72,10 +69,8 @@ public class Move {
 
         power = Range.clip(power, -1.0, 1.0);
 
-        this.leftFrontMotor.setPower(power);
-        this.rightFrontMotor.setPower(power);
-        this.leftBackMotor.setPower(power);
-        this.rightBackMotor.setPower(power);
+        this.leftMotor.setPower(power);
+        this.rightMotor.setPower(power);
     }
 
     private void setPowerOn(double left, double right) {
@@ -83,10 +78,8 @@ public class Move {
         left = Range.clip(left, -1.0, 1.0);
         right = Range.clip(right, -1.0, 1.0);
 
-        this.leftFrontMotor.setPower(left);
-        this.leftBackMotor.setPower(left);
-        this.rightFrontMotor.setPower(right);
-        this.rightBackMotor.setPower(right);
+        this.leftMotor.setPower(left);
+        this.rightMotor.setPower(right);
     }
 
 }
