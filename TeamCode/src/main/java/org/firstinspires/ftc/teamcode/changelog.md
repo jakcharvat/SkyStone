@@ -5,6 +5,7 @@
 - [#3](https://github.com/jakcharvat/SkyStone/issues/3)
 - [#5](https://github.com/jakcharvat/SkyStone/issues/5)
 - [#11](https://github.com/jakcharvat/SkyStone/issues/11)
+- [#18](https://github.com/jakcharvat/SkyStone/issues/18)
 
 ### spiderpiggy03
 
