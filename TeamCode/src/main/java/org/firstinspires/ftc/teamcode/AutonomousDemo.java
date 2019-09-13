@@ -29,11 +29,15 @@ public class AutonomousDemo extends LinearOpMode {
         waitForStart();
 
         /// Move forward at half power for 2 seconds and then stop
-        move.straight(0.5);
+        move.straight(0.25);
         Thread.sleep(2000);
         move.stop();
 
+        Thread.sleep(500);
+
         /// Move back at full power for 1 second, then stop
-        move.straight(-1.0, 1000);
+        move.straight(-0.5, 1000);
+
+        move.turnLeft(-0.5, 1000);
     }
 }
