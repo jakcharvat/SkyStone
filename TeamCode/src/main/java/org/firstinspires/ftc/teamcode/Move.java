@@ -69,7 +69,6 @@ public class Move {
      *
      * @param power desired power of the motor as a double between -1.0 and 1.0
      */
-
     void turn(double power) {
 
         power = Range.clip(power, -1.0,  0.1);
@@ -91,7 +90,6 @@ public class Move {
      * @param power           desired power of the motor as a double between -1.0 and 1.0
      * @param forMilliseconds how long the robot should move before stopping in milliseconds
      */
-
     void turn(final double power, final int forMilliseconds) throws InterruptedException {
 
         turn(power);
