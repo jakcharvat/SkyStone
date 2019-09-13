@@ -62,6 +62,47 @@ public class Move {
     }
 
     /**
+     * Starts turning the robot
+     *
+     * The [power] parameter controls the speed **and** direction of the motion. If [power]
+     * is positive then the robot will turn right, if negative it will turn left
+     *
+     * @param power desired power of the motor as a double between -1.0 and 1.0
+     */
+
+    void turn(double power) {
+
+        power = Range.clip(power, -1.0,  0.1);
+
+        setPowerOn(power, -power);
+    }
+
+
+    /**
+     * Starts turning the robot
+     *
+     * The [power] parameter controls the speed **and** direction of the motion. If [power]
+     * is positive then the robot will turn right, if negative it will turn left
+     *
+     * The parameter [forMilliseconds] must be provided at all times. The motors
+     * will run forward for the specified duration and then stop. Note that this
+     * variable must be a positive integer or 0
+     *
+     * @param power           desired power of the motor as a double between -1.0 and 1.0
+     * @param forMilliseconds how long the robot should move before stopping in milliseconds
+     */
+
+    void turn(final double power, final int forMilliseconds) throws InterruptedException {
+
+        turn(power);
+
+        Thread.sleep(forMilliseconds);
+
+        stop();
+
+    }
+
+    /**
      * Immediately stop all motion of the robot
      */
     void stop() {
