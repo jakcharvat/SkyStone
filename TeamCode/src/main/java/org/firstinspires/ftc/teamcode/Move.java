@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.prefs.BaseType;
+import org.firstinspires.ftc.teamcode.prefs.RobotSetup;
 
 
 public class Move {
@@ -12,9 +13,9 @@ public class Move {
     /// when we start testing on two or three at once.
     private BaseType type = BaseType.fourWheeler;
 
-    /// Declare variables that will hold references to the motors. [hAcrossMotor] will be
-    /// the motor in the perpendicular arm of the H Base in the final robot.
-    private DcMotor leftFrontMotor, rightFrontMotor, leftBackMotor, rightBackMotor, hAcrossMotor;
+
+    /// Declare a variable that will hold references to all the motors and sensors on the robot
+    private RobotSetup robotSetup;
 
     /**
      * A class used to control the basic movement of the robot in the 2d playing field
@@ -24,31 +25,7 @@ public class Move {
     Move(final HardwareMap hardwareMap) {
 
         /// Initialize the motors using the [hardwareMap] passed in in the constructor
-        this.leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
-        this.rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
-
-        if (this.type != BaseType.twoWheeler) {
-            this.leftBackMotor = hardwareMap.dcMotor.get("leftBackMotor");
-            this.rightBackMotor = hardwareMap.dcMotor.get("rightBackMotor");
-        }
-
-        if (this.type == BaseType.HBase) {
-            this.hAcrossMotor = hardwareMap.dcMotor.get("hAcrossMotor");
-        }
-
-        /// Reverse the direction of certain motors. This is necessary because the motors
-        /// aren't always put onto the robot in the same direction, and if the motor is
-        /// set up to face backwards, then we need to reverse it. There isn't a way to
-        /// know which motors to reverse as you code, the best way to do it is to write
-        /// a simple program and run it to see which motors work as expected and which
-        /// need to be reversed.
-        if (this.type == BaseType.fourWheeler) {
-            this.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-            this.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        } else if (this.type == BaseType.twoWheeler) {
-            this.rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        }
-
+        robotSetup = new RobotSetup(hardwareMap);
     }
 
     /**
@@ -95,13 +72,7 @@ public class Move {
 
         power = Range.clip(power, -1.0, 1.0);
 
-        leftFrontMotor.setPower(power);
-        rightFrontMotor.setPower(power);
-
-        if (type != BaseType.twoWheeler) {
-            leftBackMotor.setPower(power);
-            rightBackMotor.setPower(power);
-        }
+        setPowerOn(power, power);
     }
 
     private void setPowerOn(double left, double right) {
@@ -109,19 +80,22 @@ public class Move {
         left = Range.clip(left, -1.0, 1.0);
         right = Range.clip(right, -1.0, 1.0);
 
-        leftFrontMotor.setPower(left);
-        rightFrontMotor.setPower(right);
+        if (robotSetup.baseType() == BaseType.twoWheeler) {
 
-        if (type != BaseType.twoWheeler) {
-            leftBackMotor.setPower(left);
-            rightBackMotor.setPower(right);
+            robotSetup.twoWheelerSetup().leftMotor().setPower(left);
+            robotSetup.twoWheelerSetup().rightMotor().setPower(right);
+
+        } else if (robotSetup.baseType() == BaseType.fourWheeler) {
+
+            robotSetup.fourWheelerSetup().leftFrontMotor().setPower(left);
+            robotSetup.fourWheelerSetup().rightFrontMotor().setPower(right);
+            robotSetup.fourWheelerSetup().leftBackMotor().setPower(left);
+            robotSetup.fourWheelerSetup().rightBackMotor().setPower(right);
+
+        } else if (robotSetup.baseType() == BaseType.hBase) {
+
+            // Todo
+
         }
     }
-
-    enum BaseType {
-        twoWheeler,
-        fourWheeler,
-        HBase
-    }
-
 }
