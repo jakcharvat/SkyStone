@@ -1,15 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.prefs.BaseType;
+import org.firstinspires.ftc.teamcode.prefs.RobotSetup;
 
 
 public class Move {
 
-    /// Declare variables that will hold references to the motors
-    private DcMotor leftFrontMotor, rightFrontMotor, leftBackMotor, rightBackMotor;
+    /// Choose base type. This makes it easily possible to switch between the three bases
+    /// when we start testing on two or three at once.
+    private BaseType type = BaseType.fourWheeler;
+
+
+    /// Declare a variable that will hold references to all the motors and sensors on the robot
+    private RobotSetup robotSetup;
 
     /**
      * A class used to control the basic movement of the robot in the 2d playing field
@@ -19,13 +25,7 @@ public class Move {
     Move(final HardwareMap hardwareMap) {
 
         /// Initialize the motors using the [hardwareMap] passed in in the constructor
-        this.leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
-        this.rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
-        this.leftBackMotor = hardwareMap.dcMotor.get("leftBackMotor");
-        this.rightBackMotor = hardwareMap.dcMotor.get("rightBackMotor");
-
-        this.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        this.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotSetup = new RobotSetup(hardwareMap);
     }
 
     /**
@@ -72,10 +72,7 @@ public class Move {
 
         power = Range.clip(power, -1.0, 1.0);
 
-        this.leftFrontMotor.setPower(power);
-        this.rightFrontMotor.setPower(power);
-        this.leftBackMotor.setPower(power);
-        this.rightBackMotor.setPower(power);
+        setPowerOn(power, power);
     }
 
     private void setPowerOn(double left, double right) {
@@ -83,10 +80,22 @@ public class Move {
         left = Range.clip(left, -1.0, 1.0);
         right = Range.clip(right, -1.0, 1.0);
 
-        this.leftFrontMotor.setPower(left);
-        this.leftBackMotor.setPower(left);
-        this.rightFrontMotor.setPower(right);
-        this.rightBackMotor.setPower(right);
-    }
+        if (robotSetup.baseType() == BaseType.twoWheeler) {
 
+            robotSetup.twoWheelerSetup().leftMotor().setPower(left);
+            robotSetup.twoWheelerSetup().rightMotor().setPower(right);
+
+        } else if (robotSetup.baseType() == BaseType.fourWheeler) {
+
+            robotSetup.fourWheelerSetup().leftFrontMotor().setPower(left);
+            robotSetup.fourWheelerSetup().rightFrontMotor().setPower(right);
+            robotSetup.fourWheelerSetup().leftBackMotor().setPower(left);
+            robotSetup.fourWheelerSetup().rightBackMotor().setPower(right);
+
+        } else if (robotSetup.baseType() == BaseType.hBase) {
+
+            // Todo
+
+        }
+    }
 }
