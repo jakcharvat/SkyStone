@@ -45,8 +45,11 @@ public class RobotSetup {
      * @param hardwareMap A reference to the hardwareMap variable provided by LinearOpMode
      */
     private void init(HardwareMap hardwareMap) {
-        _twoWheelerSetup = new TwoWheelerSetup(hardwareMap);
-        _fourWheelerSetup = new FourWheelerSetup(hardwareMap);
+        if (_baseType == BaseType.twoWheeler) {
+            _twoWheelerSetup = new TwoWheelerSetup(hardwareMap);
+        } else if (_baseType == BaseType.fourWheeler) {
+            _fourWheelerSetup = new FourWheelerSetup(hardwareMap);
+        }
     }
 
     public BaseType baseType() {

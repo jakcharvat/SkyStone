@@ -11,7 +11,7 @@ public class TwoWheelerSetup {
         _leftMotor = hardwareMap.dcMotor.get("leftFrontMotor");
         _rightMotor = hardwareMap.dcMotor.get("rightFrontMotor");
 
-        _rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        _leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public DcMotor leftMotor() {
