@@ -8,12 +8,12 @@ public class GamepadControl extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        final Move move = new Move(hardwareMap);
+        final TeleMove teleMove = new TeleMove(hardwareMap);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            move.gamepadTurn(gamepad1.right_stick_x, gamepad1.right_stick_y);
+            teleMove.gamepadTurn(gamepad1.right_stick_x, gamepad1.right_stick_y);
         }
     }
 }

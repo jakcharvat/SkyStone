@@ -11,7 +11,7 @@ public class AutonomousDemo extends LinearOpMode {
 
     /// This is where we declare private variables that we will use further on
     /// in the program
-    private Move move;
+    private TeleMove teleMove;
 
 
     @Override
@@ -22,18 +22,18 @@ public class AutonomousDemo extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        /// Get a reference to the [Move] class defined in the Move class.
-        move = new Move(hardwareMap);
+        /// Get a reference to the [TeleMove] class defined in the TeleMove class.
+        teleMove = new TeleMove(hardwareMap);
 
         /// Wait for the driver to start
         waitForStart();
 
-        /// Move forward at half power for 2 seconds and then stop
-        move.straight(1);
+        /// TeleMove forward at half power for 2 seconds and then stop
+        teleMove.straight(1);
         Thread.sleep(2000);
-        move.stop();
+        teleMove.stop();
 
-        /// Move back at full power for 1 second, then stop
-        move.straight(-1.0, 2000);
+        /// TeleMove back at full power for 1 second, then stop
+        teleMove.straight(-1.0, 2000);
     }
 }
