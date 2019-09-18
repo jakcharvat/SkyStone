@@ -1,8 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class AutoMove extends TeleMove {
+import org.firstinspires.ftc.teamcode.prefs.BaseType;
+import org.firstinspires.ftc.teamcode.prefs.RobotSetup;
+
+@SuppressWarnings("StatementWithEmptyBody")
+class AutoMove extends TeleMove {
+
+    private RobotSetup robotSetup;
 
     /**
      * A class used to control the basic movement of the robot in the 2d playing field
@@ -11,6 +18,7 @@ public class AutoMove extends TeleMove {
      */
     AutoMove(HardwareMap hardwareMap) {
         super(hardwareMap);
+        robotSetup = new RobotSetup(hardwareMap);
     }
 
     /**
@@ -32,6 +40,68 @@ public class AutoMove extends TeleMove {
         Thread.sleep(forMilliseconds);
 
         stop();
+    }
+
+    void straight(final double power, final double forRotations) throws InterruptedException {
+        if (robotSetup.baseType() == BaseType.twoWheeler) {
+
+            setupMotorEncoder(robotSetup.twoWheelerSetup().leftMotor(), forRotations);
+            setupMotorEncoder(robotSetup.twoWheelerSetup().rightMotor(), forRotations);
+
+        } else if (robotSetup.baseType() == BaseType.fourWheeler) {
+
+            setupMotorEncoder(robotSetup.fourWheelerSetup().leftFrontMotor(), forRotations);
+            setupMotorEncoder(robotSetup.fourWheelerSetup().leftBackMotor(), forRotations);
+            setupMotorEncoder(robotSetup.fourWheelerSetup().rightFrontMotor(), forRotations);
+            setupMotorEncoder(robotSetup.fourWheelerSetup().rightBackMotor(), forRotations);
+
+        }
+
+        straight(power);
+
+        if (robotSetup.baseType() == BaseType.twoWheeler) {
+
+            while (robotSetup.twoWheelerSetup().leftMotor().isBusy() &&
+                    robotSetup.twoWheelerSetup().rightMotor().isBusy()) { }
+
+        } else if (robotSetup.baseType() == BaseType.fourWheeler) {
+
+            while (robotSetup.fourWheelerSetup().leftFrontMotor().isBusy() &&
+                    robotSetup.fourWheelerSetup().leftBackMotor().isBusy() &&
+                    robotSetup.fourWheelerSetup().rightFrontMotor().isBusy() &&
+                    robotSetup.fourWheelerSetup().rightBackMotor().isBusy()) { }
+
+        }
+
+        stop();
+
+        if (robotSetup.baseType() == BaseType.twoWheeler) {
+
+            returnMotorEncoder(robotSetup.twoWheelerSetup().leftMotor());
+            returnMotorEncoder(robotSetup.twoWheelerSetup().rightMotor());
+
+        } else if (robotSetup.baseType() == BaseType.fourWheeler) {
+
+            returnMotorEncoder(robotSetup.fourWheelerSetup().leftFrontMotor());
+            returnMotorEncoder(robotSetup.fourWheelerSetup().leftBackMotor());
+            returnMotorEncoder(robotSetup.fourWheelerSetup().rightFrontMotor());
+            returnMotorEncoder(robotSetup.fourWheelerSetup().rightBackMotor());
+
+        }
+    }
+
+    private void setupMotorEncoder(final DcMotor motor, final double rotations) {
+
+        final double ticksInRotation = 1440;
+
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setTargetPosition(Math.round((float) (rotations * ticksInRotation)));
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    private void returnMotorEncoder(final DcMotor motor) {
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
 }
