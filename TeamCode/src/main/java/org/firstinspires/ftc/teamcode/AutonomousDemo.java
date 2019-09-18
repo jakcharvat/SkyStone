@@ -9,10 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 public class AutonomousDemo extends LinearOpMode {
 
-    /// This is where we declare private variables that we will use further on
-    /// in the program
-    private TeleMove teleMove;
-
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -23,17 +19,19 @@ public class AutonomousDemo extends LinearOpMode {
         telemetry.update();
 
         /// Get a reference to the [TeleMove] class defined in the TeleMove class.
-        teleMove = new TeleMove(hardwareMap);
+        /// This is where we declare private variables that we will use further on
+        /// in the program
+        AutoMove autoMove = new AutoMove(hardwareMap);
 
         /// Wait for the driver to start
         waitForStart();
 
         /// TeleMove forward at half power for 2 seconds and then stop
-        teleMove.straight(1);
+        autoMove.straight(1);
         Thread.sleep(2000);
-        teleMove.stop();
+        autoMove.stop();
 
         /// TeleMove back at full power for 1 second, then stop
-        teleMove.straight(-1.0, 2000);
+        autoMove.straight(-1.0, 2000);
     }
 }
