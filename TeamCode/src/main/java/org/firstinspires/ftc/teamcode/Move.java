@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.prefs.BaseType;
 import org.firstinspires.ftc.teamcode.prefs.RobotSetup;
 
@@ -66,6 +67,36 @@ public class Move {
      */
     void stop() {
         setPowerOnAll(0.0);
+    }
+
+    void gamepadTurn(final double x, final double y) {
+
+        /// Since the joysticks don't move in a square field, but rather a circular one, I use the
+        /// equation of a circle here to calculate the fractional power the robot should move at
+        /// as a distance from the current position of the stick to the origin
+        final double power = Range.clip(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)), 0, 1);
+        final double turn = Math.abs(x);
+
+        final boolean shouldTurnRight = x >= 0;
+        final boolean shouldMoveForward = y >= 0;
+
+        double right, left;
+
+        if (shouldTurnRight) {
+            left = power;
+            right = power - (power * turn);
+        } else {
+            left = power - (power * turn);
+            right = power;
+        }
+
+        if (!shouldMoveForward) {
+            left = -left;
+            right = -right;
+        }
+
+        setPowerOn(left, right);
+
     }
 
     private void setPowerOnAll(double power) {
