@@ -11,7 +11,7 @@ public class RobotSetup {
     /**
      * Choose the type of robot the program will be run on. The class initializer
      */
-    private BaseType _baseType = BaseType.twoWheeler;
+    private BaseType _baseType = BaseType.fourWheeler;
 
     private TwoWheelerSetup _twoWheelerSetup;
     private FourWheelerSetup _fourWheelerSetup;

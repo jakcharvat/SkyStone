@@ -92,7 +92,7 @@ class AutoMove extends TeleMove {
 
     private void setupMotorEncoder(final DcMotor motor, final double rotations) {
 
-        final double ticksInRotation = 1440;
+        final double ticksInRotation = 1120;
 
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

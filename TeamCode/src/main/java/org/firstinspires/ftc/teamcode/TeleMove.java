@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
@@ -48,7 +47,10 @@ class TeleMove {
         setPowerOnAll(0.0);
     }
 
-    void gamepadTurn(final double x, final double y) {
+    void gamepadTurn(double x, double y) {
+
+        y = -y;
+        x = -x;
 
         /// Since the joysticks don't move in a square field, but rather a circular one, I use the
         /// equation of a circle here to calculate the fractional power the robot should move at
@@ -63,15 +65,17 @@ class TeleMove {
 
         if (shouldTurnRight) {
             left = power;
-            right = power - (power * turn);
+            right = Range.clip(power - (2 * power * turn), -1, 1);
         } else {
-            left = power - (power * turn);
+            left = Range.clip(power - (2 * power * turn), -1, 1);
             right = power;
         }
 
         if (!shouldMoveForward) {
-            left = -left;
-            right = -right;
+            double leftTemp = left;
+
+            left = -right;
+            right = -leftTemp;
         }
 
         setPowerOn(left, right);

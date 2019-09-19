@@ -27,11 +27,11 @@ public class AutonomousDemo extends LinearOpMode {
         waitForStart();
 
         /// TeleMove forward at half power for 2 seconds and then stop
-        autoMove.straight(1);
+        autoMove.straight(-0.5, 1.0);
         Thread.sleep(2000);
         autoMove.stop();
 
         /// TeleMove back at full power for 1 second, then stop
-        autoMove.straight(-1.0, 2000);
+        autoMove.straight(1.0, 1.0);
     }
 }
