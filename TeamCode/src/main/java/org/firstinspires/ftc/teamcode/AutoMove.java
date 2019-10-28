@@ -42,7 +42,14 @@ class AutoMove extends TeleMove {
         stop();
     }
 
-    void straight(final double power, final double forRotations) throws InterruptedException {
+    void straight(final double power, double forRotations) throws InterruptedException {
+
+        forRotations = Math.abs(forRotations);
+
+        if (power < 0) {
+            forRotations = -forRotations;
+        }
+
         if (robotSetup.baseType() == BaseType.twoWheeler) {
 
             setupMotorEncoder(robotSetup.twoWheelerSetup().leftMotor(), forRotations);
@@ -61,14 +68,14 @@ class AutoMove extends TeleMove {
 
         if (robotSetup.baseType() == BaseType.twoWheeler) {
 
-            while (robotSetup.twoWheelerSetup().leftMotor().isBusy() &&
+            while (robotSetup.twoWheelerSetup().leftMotor().isBusy() ||
                     robotSetup.twoWheelerSetup().rightMotor().isBusy()) { }
 
         } else if (robotSetup.baseType() == BaseType.fourWheeler) {
 
-            while (robotSetup.fourWheelerSetup().leftFrontMotor().isBusy() &&
-                    robotSetup.fourWheelerSetup().leftBackMotor().isBusy() &&
-                    robotSetup.fourWheelerSetup().rightFrontMotor().isBusy() &&
+            while (robotSetup.fourWheelerSetup().leftFrontMotor().isBusy() ||
+                    robotSetup.fourWheelerSetup().leftBackMotor().isBusy() ||
+                    robotSetup.fourWheelerSetup().rightFrontMotor().isBusy() ||
                     robotSetup.fourWheelerSetup().rightBackMotor().isBusy()) { }
 
         }

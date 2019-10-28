@@ -11,10 +11,11 @@ public class RobotSetup {
     /**
      * Choose the type of robot the program will be run on. The class initializer
      */
-    private BaseType _baseType = BaseType.fourWheeler;
+    private BaseType _baseType = BaseType.diagonal;
 
     private TwoWheelerSetup _twoWheelerSetup;
     private FourWheelerSetup _fourWheelerSetup;
+    private DiagonalSetup _diagonalSetup;
 
     /**
      * Initialize the robot to work with the default base type set up in the [RobotSetup] class
@@ -49,6 +50,8 @@ public class RobotSetup {
             _twoWheelerSetup = new TwoWheelerSetup(hardwareMap);
         } else if (_baseType == BaseType.fourWheeler) {
             _fourWheelerSetup = new FourWheelerSetup(hardwareMap);
+        } else if (_baseType == BaseType.diagonal) {
+            _diagonalSetup = new DiagonalSetup(hardwareMap);
         }
     }
 
@@ -63,4 +66,6 @@ public class RobotSetup {
     public FourWheelerSetup fourWheelerSetup() {
         return _fourWheelerSetup;
     }
+
+    public DiagonalSetup diagonalSetup() { return _diagonalSetup; }
 }

@@ -3,17 +3,14 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.prefs.BaseType;
 import org.firstinspires.ftc.teamcode.prefs.RobotSetup;
+import org.firstinspires.ftc.teamcode.utils.UtilFunctions;
+import org.firstinspires.ftc.teamcode.utils.Power;
 
 
 class TeleMove {
-
-    /// Choose base type. This makes it easily possible to switch between the three bases
-    /// when we start testing on two or three at once.
-    private BaseType type = BaseType.fourWheeler;
-
-
     /// Declare a variable that will hold references to all the motors and sensors on the robot
     private RobotSetup robotSetup;
 
@@ -82,6 +79,46 @@ class TeleMove {
 
     }
 
+    /**
+     * This method is only supposed to work on the diagonal based robot. It moves the robot in the
+     * direction specified by one of the sticks on the controller, and turns it in the direction
+     * specified by the x-axis position of the other stick
+     *
+     * WARNING: As of now it only moves in the specified direction, doesn't turn
+     *
+     * @param xMove the x-axis position of the stick controlling the motion of the robot
+     * @param yMove the y-axis position of the stick controlling the motion of the robot
+     * @param xTurn the x-axis position of the stick controlling the turning of the robot
+     */
+    void diagonalBaseGamepadMove(double xMove, double yMove, double xTurn, Telemetry telemetry) {
+
+        // Kill the execution of the method if a base type other than diagonal is selected,
+        // to avoid NPEs and other disgusting behaviour later on in the method
+        if (robotSetup.baseType() != BaseType.diagonal) {
+            telemetry.addData("Quitting diagonal move", "true");
+            telemetry.update();
+            return;
+        }
+
+        UtilFunctions utilFunctions = new UtilFunctions();
+
+        yMove = -yMove;
+        xMove = -xMove;
+        xTurn = -xTurn;
+
+        final double angle = utilFunctions.calculateJoystickAngle(xMove, yMove);
+        final double power = Range.clip(Math.sqrt(Math.pow(xMove, 2) + Math.pow(yMove, 2)), 0, 1);
+
+        Power individualMotorPower = utilFunctions.calculateMotorSettingsNeededToAchieveAngleAndPower(angle, power);
+
+        individualMotorPower = utilFunctions.adaptMotorSettingsToTurn(individualMotorPower, xTurn);
+
+        robotSetup.diagonalSetup().leftFrontMotor().setPower(individualMotorPower.getLeftFront());
+        robotSetup.diagonalSetup().leftBackMotor().setPower(individualMotorPower.getLeftBack());
+        robotSetup.diagonalSetup().rightFrontMotor().setPower(individualMotorPower.getRightFront());
+        robotSetup.diagonalSetup().rightBackMotor().setPower(individualMotorPower.getRightBack());
+    }
+
     private void setPowerOnAll(double power) {
 
         power = Range.clip(power, -1.0, 1.0);
@@ -111,5 +148,9 @@ class TeleMove {
             // Todo
 
         }
+    }
+
+    public RobotSetup getRobotSetup() {
+        return robotSetup;
     }
 }

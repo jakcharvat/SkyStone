@@ -8,8 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name = "Autonomous Demo", group = "Demos")
 
 public class AutonomousDemo extends LinearOpMode {
-
-
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -28,7 +26,7 @@ public class AutonomousDemo extends LinearOpMode {
 
         /// TeleMove forward at half power for 2 seconds and then stop
         autoMove.straight(-0.5, 1.0);
-        Thread.sleep(2000);
+        sleep(2000);
         autoMove.stop();
 
         /// TeleMove back at full power for 1 second, then stop
