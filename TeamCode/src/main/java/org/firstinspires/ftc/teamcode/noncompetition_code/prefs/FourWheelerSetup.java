@@ -1,27 +1,27 @@
-package org.firstinspires.ftc.teamcode.prefs;
+package org.firstinspires.ftc.teamcode.noncompetition_code.prefs;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class DiagonalSetup {
+public class FourWheelerSetup {
     private DcMotor _leftFrontMotor, _rightFrontMotor, _leftBackMotor, _rightBackMotor;
 
-    DiagonalSetup(HardwareMap hardwareMap) {
+    FourWheelerSetup(HardwareMap hardwareMap) {
         _leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
         _rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
         _leftBackMotor = hardwareMap.dcMotor.get("leftBackMotor");
         _rightBackMotor = hardwareMap.dcMotor.get("rightBackMotor");
 
-//        _leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        _rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        _leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        _rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        _leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        _leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        _leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        _rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        _leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        _rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        _leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        _rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        _leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        _rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
+
 
     public DcMotor leftFrontMotor() {
         return _leftFrontMotor;

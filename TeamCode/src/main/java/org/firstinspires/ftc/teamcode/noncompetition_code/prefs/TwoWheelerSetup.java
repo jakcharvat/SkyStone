@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.prefs;
+package org.firstinspires.ftc.teamcode.noncompetition_code.prefs;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;

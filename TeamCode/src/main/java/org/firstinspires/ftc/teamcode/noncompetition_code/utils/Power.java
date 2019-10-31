@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utils;
+package org.firstinspires.ftc.teamcode.noncompetition_code.utils;
 
 public class Power {
     private final double leftFront;

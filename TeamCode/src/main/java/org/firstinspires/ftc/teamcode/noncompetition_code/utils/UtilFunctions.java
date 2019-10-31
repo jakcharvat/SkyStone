@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.utils;
+package org.firstinspires.ftc.teamcode.noncompetition_code.utils;
 
 public class UtilFunctions {
 
-    public double calculateJoystickAngle(double x, double y) {
+    static public double calculateJoystickAngle(double x, double y) {
 
         double angle = Math.atan(Math.abs(y) / Math.abs(x));
 
@@ -23,7 +23,7 @@ public class UtilFunctions {
         return 0;
     }
 
-    private Offset calculateXyAtPower(double angle, double power) {
+    static private Offset calculateXyAtPower(double angle, double power) {
 
         // All perfect 90° angles
         if (angle == 0 || angle == (2 * Math.PI)) return new Offset(0, power);
@@ -59,31 +59,32 @@ public class UtilFunctions {
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
-    public Power calculateMotorSettingsNeededToAchieveAngleAndPower(double angle, double power) {
+    static public Power calculateMotorSettingsNeededToAchieveAngleAndPower(double angle, double power) {
 
         angle = angle - (Math.PI / 4);
         if (angle < 0) angle = (2 * Math.PI) + angle;
 
-        double xPower = calculateXyAtPower(angle, power).getDx();
-        double yPower = calculateXyAtPower(angle, power).getDy();
+        final Offset motorPower = calculateXyAtPower(angle, power);
 
+        final double xPower = motorPower.getDx();
+        final double yPower = motorPower.getDy();
 
         return new Power(yPower, -xPower, xPower, -yPower, power, angle, xPower, yPower);
     }
 
 
-    public Power adaptMotorSettingsToTurn(Power power, double turn) {
+    static public Power adaptMotorSettingsToTurn(Power power, double turn) {
 
-        double xComponent = power.getxComponent();
-        double yComponent = power.getyComponent();
+        final double xComponent = power.getxComponent();
+        final double yComponent = power.getyComponent();
 
-        double xComponentDelta = Math.min(1 - xComponent, 1 + xComponent);
-        double yComponentDelta = Math.min(1 - yComponent, 1 + yComponent);
+        final double xComponentDelta = Math.min(1 - xComponent, 1 + xComponent);
+        final double yComponentDelta = Math.min(1 - yComponent, 1 + yComponent);
 
-        double lf = yComponent + (turn * yComponentDelta);
-        double lb = -xComponent + (turn * xComponentDelta);
-        double rf = xComponent + (turn * xComponentDelta);
-        double rb = -yComponent + (turn * yComponentDelta);
+        final double lf = yComponent + (turn * yComponentDelta);
+        final double lb = -xComponent + (turn * xComponentDelta);
+        final double rf = xComponent + (turn * xComponentDelta);
+        final double rb = -yComponent + (turn * yComponentDelta);
 
         return new Power(lf, lb, rf, rb, power.getPower(), power.getAngle(), xComponent, yComponent);
     }

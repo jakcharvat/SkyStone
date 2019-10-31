@@ -3,13 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.prefs.BaseType;
-import org.firstinspires.ftc.teamcode.prefs.RobotSetup;
+import org.firstinspires.ftc.teamcode.noncompetition_code.prefs.BaseType;
 
 @SuppressWarnings("StatementWithEmptyBody")
-class AutoMove extends TeleMove {
-
-    private RobotSetup robotSetup;
+public class AutoMove extends TeleMove {
 
     /**
      * A class used to control the basic movement of the robot in the 2d playing field
@@ -18,7 +15,6 @@ class AutoMove extends TeleMove {
      */
     AutoMove(HardwareMap hardwareMap) {
         super(hardwareMap);
-        robotSetup = new RobotSetup(hardwareMap);
     }
 
     /**
@@ -42,7 +38,7 @@ class AutoMove extends TeleMove {
         stop();
     }
 
-    void straight(final double power, double forRotations) throws InterruptedException {
+    void straight(final double power, double forRotations) {
 
         forRotations = Math.abs(forRotations);
 
@@ -50,51 +46,23 @@ class AutoMove extends TeleMove {
             forRotations = -forRotations;
         }
 
-        if (robotSetup.baseType() == BaseType.twoWheeler) {
+        setupMotorEncoder(robotSetup.getLeftFrontMotor(), forRotations);
+        setupMotorEncoder(robotSetup.getLeftBackMotor(), forRotations);
+        setupMotorEncoder(robotSetup.getRightFrontMotor(), forRotations);
+        setupMotorEncoder(robotSetup.getRightBackMotor(), forRotations);
 
-            setupMotorEncoder(robotSetup.twoWheelerSetup().leftMotor(), forRotations);
-            setupMotorEncoder(robotSetup.twoWheelerSetup().rightMotor(), forRotations);
 
-        } else if (robotSetup.baseType() == BaseType.fourWheeler) {
-
-            setupMotorEncoder(robotSetup.fourWheelerSetup().leftFrontMotor(), forRotations);
-            setupMotorEncoder(robotSetup.fourWheelerSetup().leftBackMotor(), forRotations);
-            setupMotorEncoder(robotSetup.fourWheelerSetup().rightFrontMotor(), forRotations);
-            setupMotorEncoder(robotSetup.fourWheelerSetup().rightBackMotor(), forRotations);
-
-        }
-
-        straight(power);
-
-        if (robotSetup.baseType() == BaseType.twoWheeler) {
-
-            while (robotSetup.twoWheelerSetup().leftMotor().isBusy() ||
-                    robotSetup.twoWheelerSetup().rightMotor().isBusy()) { }
-
-        } else if (robotSetup.baseType() == BaseType.fourWheeler) {
-
-            while (robotSetup.fourWheelerSetup().leftFrontMotor().isBusy() ||
-                    robotSetup.fourWheelerSetup().leftBackMotor().isBusy() ||
-                    robotSetup.fourWheelerSetup().rightFrontMotor().isBusy() ||
-                    robotSetup.fourWheelerSetup().rightBackMotor().isBusy()) { }
-
-        }
+        while (robotSetup.getLeftFrontMotor().isBusy() ||
+                robotSetup.getLeftBackMotor().isBusy() ||
+                robotSetup.getRightFrontMotor().isBusy() ||
+                robotSetup.getRightBackMotor().isBusy()) { }
 
         stop();
 
-        if (robotSetup.baseType() == BaseType.twoWheeler) {
-
-            returnMotorEncoder(robotSetup.twoWheelerSetup().leftMotor());
-            returnMotorEncoder(robotSetup.twoWheelerSetup().rightMotor());
-
-        } else if (robotSetup.baseType() == BaseType.fourWheeler) {
-
-            returnMotorEncoder(robotSetup.fourWheelerSetup().leftFrontMotor());
-            returnMotorEncoder(robotSetup.fourWheelerSetup().leftBackMotor());
-            returnMotorEncoder(robotSetup.fourWheelerSetup().rightFrontMotor());
-            returnMotorEncoder(robotSetup.fourWheelerSetup().rightBackMotor());
-
-        }
+        returnMotorEncoder(robotSetup.getLeftFrontMotor());
+        returnMotorEncoder(robotSetup.getLeftBackMotor());
+        returnMotorEncoder(robotSetup.getRightFrontMotor());
+        returnMotorEncoder(robotSetup.getRightBackMotor());
     }
 
     private void setupMotorEncoder(final DcMotor motor, final double rotations) {
@@ -110,5 +78,4 @@ class AutoMove extends TeleMove {
     private void returnMotorEncoder(final DcMotor motor) {
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-
 }
