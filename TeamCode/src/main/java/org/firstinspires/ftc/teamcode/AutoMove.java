@@ -51,6 +51,7 @@ public class AutoMove extends TeleMove {
         setupMotorEncoder(robotSetup.getRightFrontMotor(), forRotations);
         setupMotorEncoder(robotSetup.getRightBackMotor(), forRotations);
 
+        straight(power);
 
         while (robotSetup.getLeftFrontMotor().isBusy() ||
                 robotSetup.getLeftBackMotor().isBusy() ||
