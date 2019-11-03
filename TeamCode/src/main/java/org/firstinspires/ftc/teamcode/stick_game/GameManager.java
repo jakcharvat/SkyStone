@@ -33,6 +33,10 @@ public class GameManager {
     // Keeps track of which row the human player has removed sticks from to lock all other rows
     private Integer rowBlock;
 
+    // Reference to MoveManager. For simplicity and communication reasons, this class fill handle
+    // all communication between [GameLoop] and [MoveManager].
+    MoveManager moveManager = new MoveManager();
+
     /// Returns the number of sticks present in the given row. Not their status, only the number of sticks at the start, where
     /// the first row has index 0.
     int sticksAtRow(int row) {

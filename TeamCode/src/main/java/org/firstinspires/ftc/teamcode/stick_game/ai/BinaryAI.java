@@ -10,7 +10,7 @@ import java.util.List;
 public class BinaryAI extends AI {
 
     //region Constructor
-    BinaryAI(GameManager manager) {
+    public BinaryAI(GameManager manager) {
         super(manager);
     }
     //endregion

@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.stick_game;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-public class PlayStickGame extends LinearOpMode {
+public class GameLoop extends LinearOpMode {
 
-    private MoveMethods move;
+    GameManager manager = new GameManager(4);
 
     @Override
     public void runOpMode(){

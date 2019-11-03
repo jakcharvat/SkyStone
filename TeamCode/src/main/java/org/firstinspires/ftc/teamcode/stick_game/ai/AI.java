@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.stick_game.ai;
 
 import org.firstinspires.ftc.teamcode.stick_game.GameManager;
 
-abstract class AI {
+public abstract class AI {
 
-    AI(GameManager manager) {
+    public AI(GameManager manager) {
         this.manager = manager;
     }
 
