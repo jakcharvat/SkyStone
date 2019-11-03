@@ -143,10 +143,6 @@ class TeleMove {
             robotSetup.fourWheelerSetup().leftBackMotor().setPower(left);
             robotSetup.fourWheelerSetup().rightBackMotor().setPower(right);
 
-        } else if (robotSetup.baseType() == BaseType.hBase) {
-
-            // Todo
-
         }
     }
 

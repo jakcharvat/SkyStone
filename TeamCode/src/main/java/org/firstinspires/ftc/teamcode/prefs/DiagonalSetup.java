@@ -25,9 +25,7 @@ public class DiagonalSetup {
         _rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public DcMotor leftFrontMotor() {
-        return _leftFrontMotor;
-    }
+    public DcMotor leftFrontMotor() { return _leftFrontMotor; }
 
     public DcMotor rightFrontMotor() {
         return _rightFrontMotor;
@@ -41,9 +39,9 @@ public class DiagonalSetup {
         return _rightBackMotor;
     }
 
-    public DcMotor upDownMotor(){return _upDownMotor;}
+    public DcMotor upDownMotor() { return _upDownMotor; }
 
-    public DcMotor woundUpDownMotor(){return _woundUpDownMotor;}
+    public DcMotor woundUpDownMotor() { return _woundUpDownMotor; }
 
 
 }

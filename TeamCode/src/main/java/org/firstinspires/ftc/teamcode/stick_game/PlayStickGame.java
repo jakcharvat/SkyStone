@@ -1,9 +1,6 @@
-package org.firstinspires.ftc.teamcode.utils;
+package org.firstinspires.ftc.teamcode.stick_game;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
-import org.firstinspires.ftc.teamcode.prefs.DiagonalSetup;
 
 public class PlayStickGame extends LinearOpMode {
 
