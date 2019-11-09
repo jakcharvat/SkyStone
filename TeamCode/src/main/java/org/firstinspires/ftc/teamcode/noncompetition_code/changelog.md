@@ -8,6 +8,8 @@
 - [#18](https://github.com/jakcharvat/SkyStone/issues/18)
 - [#23](https://github.com/jakcharvat/SkyStone/issues/23)
 - [#27](https://github.com/jakcharvat/SkyStone/issues/27)
+- [#23](https://github.com/jakcharvat/SkyStone/issues/23)
+- [#29](https://github.com/jakcharvat/SkyStone/issues/29)
 
 ### spiderpiggy03
 
