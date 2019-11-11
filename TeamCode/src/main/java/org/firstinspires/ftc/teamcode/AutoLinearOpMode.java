@@ -1,21 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.teamcode.noncompetition_code.prefs.BaseType;
 
 @SuppressWarnings("StatementWithEmptyBody")
-public class AutoMove extends TeleMove {
-
-    /**
-     * A class used to control the basic movement of the robot in the 2d playing field
-     *
-     * @param hardwareMap A reference to the hardwareMap variable provided by LinearOpMode
-     */
-    AutoMove(HardwareMap hardwareMap) {
-        super(hardwareMap);
-    }
+abstract class AutoLinearOpMode extends TeleLinearOpMode {
 
     /**
      * Starts moving the robot straight
@@ -30,15 +18,15 @@ public class AutoMove extends TeleMove {
      * @param power           desired power of the motor as a double between -1.0 and 1.0
      * @param forMilliseconds how long the robot should move before stopping in milliseconds
      */
-    void straight(final double power, final int forMilliseconds) throws InterruptedException {
+    protected void straight(final double power, final int forMilliseconds) throws InterruptedException {
         straight(power);
 
         Thread.sleep(forMilliseconds);
 
-        stop();
+        stopMotion();
     }
 
-    void straight(final double power, double forRotations) {
+    protected void straight(final double power, double forRotations) {
 
         forRotations = Math.abs(forRotations);
 
@@ -56,9 +44,9 @@ public class AutoMove extends TeleMove {
         while (robotSetup.getLeftFrontMotor().isBusy() ||
                 robotSetup.getLeftBackMotor().isBusy() ||
                 robotSetup.getRightFrontMotor().isBusy() ||
-                robotSetup.getRightBackMotor().isBusy()) { }
+                robotSetup.getRightBackMotor().isBusy());
 
-        stop();
+        stopMotion();
 
         returnMotorEncoder(robotSetup.getLeftFrontMotor());
         returnMotorEncoder(robotSetup.getLeftBackMotor());
