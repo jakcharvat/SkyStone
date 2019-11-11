@@ -1,18 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
-public class TeleMove extends BaseMove {
-
-    /**
-     * A class used to control the basic movement of the robot in the 2d playing field
-     *
-     * @param hardwareMap A reference to the hardwareMap variable provided by LinearOpMode
-     */
-    TeleMove(HardwareMap hardwareMap) {
-        super(hardwareMap);
-    }
-
+abstract class TeleLinearOpMode extends BaseLinearOpMode {
     /**
      * Starts moving the robot straight
      *
@@ -28,7 +16,7 @@ public class TeleMove extends BaseMove {
     /**
      * Immediately stop all motion of the robot
      */
-    void stop() {
+    void stopMotion() {
         setPowerOnAll(0.0);
     }
 }
