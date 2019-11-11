@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-@SuppressWarnings("ALL")
+@SuppressWarnings("StatementWithEmptyBody")
 class ArmController {
 
     /**
@@ -43,6 +43,23 @@ class ArmController {
     private static final double MAXIMUM_ARM_HEIGHT = 200.0;
 
     /**
+     * Ratio of the small and big gears driving the arm rotation
+     */
+    private static final double ARM_ANGLE_SERVO_GEAR_RATIO = 5;
+
+    /**
+     * Angle in which the arm is in a standard up position - meaning in a position in
+     * which the stone is a standard length away from the robot and also a standard
+     * height in relation to how much the arm was risen
+     */
+    private static final double STANDARD_ARM_UP_ANGLE = 3 * Math.PI / 2;
+
+    /**
+     * Angle in which the arm is in a standard down position ready to pick up a stone
+     */
+    private static final double STANDARD_ARM_DOWN_ANGLE = Math.PI; //FIXME: As above
+
+    /**
      * Keeps track of the height the arm is currently at. Used to calculate distance to raise / lower between
      * two positions or to the very top
      */
@@ -58,7 +75,7 @@ class ArmController {
         if (robotSetup.getArmTouchSensor().getState()) return;
 
         robotSetup.getArmMotor().setPower(-ARM_MOTION_SPEED);
-        while (!robotSetup.getArmTouchSensor().getState()) { }
+        while (!robotSetup.getArmTouchSensor().getState());
         robotSetup.getArmMotor().setPower(0);
 
         currentHeight = 0.0;
@@ -102,7 +119,16 @@ class ArmController {
         currentHeight = targetHeight;
     }
 
+    /**
+     * Convert a distance the arm should move into ticks in the motor.
+     *
+     * @param distance How much, in cm, the arm should move up or down
+     * @return The ticks the motor must turn by to move the specified distance
+     */
     private int calculateTicksToRaiseByDistance(double distance) {
+
+        //TODO: Convert distance to move into distance of rope to be wound up or down
+
         final double rotations = distance / WIND_UP_COIL_CIRCUMFERENCE;
         final double ticks = rotations * ARM_MOTOR_TICKS;
         return (int) Math.round(ticks);

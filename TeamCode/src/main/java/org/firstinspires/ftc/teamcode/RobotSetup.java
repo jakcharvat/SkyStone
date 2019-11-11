@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class RobotSetup {
 
@@ -19,6 +20,8 @@ public class RobotSetup {
     //region Arm
     private DcMotor armMotor;
     private DigitalChannel armTouchSensor;
+    private Servo armServo;     /// Controls the angle of the portion of the arm holding the claw
+    private Servo clawServo;    /// Controls the opening and closing of the claw
     //endregion
 
 
@@ -56,6 +59,8 @@ public class RobotSetup {
     private void initArm(HardwareMap hardwareMap) {
         armMotor = hardwareMap.dcMotor.get("armMotor");
         armTouchSensor = hardwareMap.digitalChannel.get("armTouchSensor");
+        armServo = hardwareMap.servo.get("armServo");
+        clawServo = hardwareMap.servo.get("clawServo");
     }
 
     //MARK: getters
@@ -71,4 +76,6 @@ public class RobotSetup {
 
     DcMotor getArmMotor() { return armMotor; }
     DigitalChannel getArmTouchSensor() { return armTouchSensor; }
+    Servo getArmServo() { return armServo; }
+    Servo getClawServo() { return clawServo; }
 }
