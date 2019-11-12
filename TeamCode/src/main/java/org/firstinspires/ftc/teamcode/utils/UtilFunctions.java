@@ -88,4 +88,12 @@ public class UtilFunctions {
         return new Power(lf, lb, rf, rb, power.getPower(), power.getAngle(), xComponent, yComponent);
     }
 
+    public double degToRad(int degrees) {
+        return degrees * Math.PI / 180;
+    }
+
+    public int radToDeg(double rad) {
+        return (int) Math.round(rad * 180 / Math.PI);
+    }
+
 }

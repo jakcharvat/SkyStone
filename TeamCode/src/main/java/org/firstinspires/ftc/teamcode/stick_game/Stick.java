@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 class Stick {
 
-    Stick(int row, int stick) {
+    Stick(int row, int stick, MoveManager manager) {
         this.stickNumber = stick;
         this.rowNumber = row;
     }
@@ -15,8 +15,6 @@ class Stick {
 
     void remove() {
         isRemoved = true;
-
-        // TODO: Implement Remove
     }
 
     public int getRowNumber() {

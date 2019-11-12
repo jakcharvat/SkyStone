@@ -9,14 +9,14 @@ import java.util.List;
 public class GameRow {
 
     //region Constructor
-    GameRow(int rowNumber, int numberOfSticks) {
+    GameRow(int rowNumber, int numberOfSticks, MoveManager moveManager) {
         this.originalNumberOfSticks = numberOfSticks;
         this.rowNumber = rowNumber;
         this.currentNumberOfSticks = this.originalNumberOfSticks;
         this.binaryNumberOfSticks = new Binary(this.currentNumberOfSticks);
 
         for (int i = 0; i < originalNumberOfSticks; i++) {
-            sticks.add(new Stick(rowNumber, i));
+            sticks.add(new Stick(rowNumber, i, moveManager));
         }
     }
     //endregion

@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.stick_game;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utils.Binary;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,14 +11,18 @@ import java.util.List;
 
 public class GameManager {
 
-    GameManager(int rows) {
+    GameManager(int rows, HardwareMap map, Telemetry telemetry) {
+
+        this.moveManager = new MoveManager(map, telemetry);
+
         final int firstRowSticks = 1;
         final int stickDifferenceBetweenRows = 2;
 
         for (int i = 0; i < rows; i++) {
             gameRows.add(firstRowSticks + (i * stickDifferenceBetweenRows));
-            board.add(new GameRow(i, gameRows.get(i)));
+            board.add(new GameRow(i, gameRows.get(i), moveManager));
         }
+
     }
 
     // A list of the numbers of sticks in each row
@@ -28,23 +35,23 @@ public class GameManager {
     private GameStatus gameStatus = GameStatus.waitingToStart;
 
     // Tracks the current player
-    private Player currentPlayer = Player.first;
+    private Player currentPlayer = Player.human;
 
     // Keeps track of which row the human player has removed sticks from to lock all other rows
-    private Integer rowBlock;
+    private Integer rowBlock = null;
 
     // Reference to MoveManager. For simplicity and communication reasons, this class fill handle
     // all communication between [GameLoop] and [MoveManager].
-    MoveManager moveManager = new MoveManager();
+    MoveManager moveManager;
 
     /// Returns the number of sticks present in the given row. Not their status, only the number of sticks at the start, where
-    /// the first row has index 0.
+    /// the human row has index 0.
     int sticksAtRow(int row) {
         return gameRows.get(row);
     }
 
     void remove(int row, int stick) {
-        if (rowBlock == row || rowBlock == null) {
+        if (rowBlock == null || rowBlock == row) {
             board.get(row).remove(stick);
             rowBlock = row;
         }
@@ -73,11 +80,15 @@ public class GameManager {
 
     void handoffPlayer() {
         rowBlock = null;
-        currentPlayer = currentPlayer == Player.first ? Player.second : Player.first;
+
+        if (gameStatus != GameStatus.finished) {
+            currentPlayer = currentPlayer == Player.human ? Player.robot : Player.human;
+        }
     }
 
     public List<GameRow> board() { return board; }
     GameStatus status() { return gameStatus; }
+    Integer rowBlock() { return rowBlock; }
     Player currentPlayer() { return currentPlayer; }
     public Binary totalBinary() {
         Binary totalBinary = new Binary(0);
@@ -113,6 +124,6 @@ enum GameStatus {
 }
 
 enum Player {
-    first,
-    second
+    human,
+    robot
 }

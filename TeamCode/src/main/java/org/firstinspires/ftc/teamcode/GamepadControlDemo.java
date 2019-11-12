@@ -40,7 +40,7 @@ public class GamepadControlDemo extends LinearOpMode {
             Get the value of the right stick along the y (up - down) axis
             (which is provided as a double between -1.0 and 1.0) and pass
             it to [teleMove.straight()] as the power parameter. This will update
-            the drive strength several times per second and ensure continuous
+            the drive strength several times per robot and ensure continuous
             updates from the gamepad.
 
             There are issues with this, for example if the robot is top-heavy

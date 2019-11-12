@@ -4,15 +4,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class DiagonalSetup {
-    final private DcMotor _leftFrontMotor, _rightFrontMotor, _leftBackMotor, _rightBackMotor, _upDownMotor,_woundUpDownMotor;
+    final private DcMotor _leftFrontMotor, _rightFrontMotor, _leftBackMotor, _rightBackMotor;
+//            _upDownMotor,_woundUpDownMotor;
 
     DiagonalSetup(HardwareMap hardwareMap) {
+        //region Motors
         _leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
         _rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
         _leftBackMotor = hardwareMap.dcMotor.get("leftBackMotor");
         _rightBackMotor = hardwareMap.dcMotor.get("rightBackMotor");
-        _upDownMotor = hardwareMap.dcMotor.get("upDownMotor");
-        _woundUpDownMotor = hardwareMap.dcMotor.get("woundUpDownMotor");
+//        _upDownMotor = hardwareMap.dcMotor.get("upDownMotor");
+//        _woundUpDownMotor = hardwareMap.dcMotor.get("woundUpDownMotor");
+        //endregion
 
 //        _leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //        _rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -39,9 +42,9 @@ public class DiagonalSetup {
         return _rightBackMotor;
     }
 
-    public DcMotor upDownMotor() { return _upDownMotor; }
-
-    public DcMotor woundUpDownMotor() { return _woundUpDownMotor; }
+//    public DcMotor upDownMotor() { return _upDownMotor; }
+//
+//    public DcMotor woundUpDownMotor() { return _woundUpDownMotor; }
 
 
 }

@@ -12,9 +12,22 @@ public class StickCoordinate {
     //endregion
 
     //region Properties
-    private final int rowNumber;
-    private final int stickNumber;
+    private int rowNumber;
+    private int stickNumber;
     //endregion
+
+    public void moveToStick(int row, int stick) {
+
+        int numberOfSticksInTargetRow = (2 * row) + 1;
+
+        if (stick < numberOfSticksInTargetRow) {
+            rowNumber = row;
+            stickNumber = stick;
+        } else {
+            rowNumber = row;
+            stickNumber = numberOfSticksInTargetRow - 1;
+        }
+    }
 
     //region Getters
     public int rowNumber() { return rowNumber; }

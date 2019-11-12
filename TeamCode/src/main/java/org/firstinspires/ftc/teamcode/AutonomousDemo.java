@@ -29,7 +29,7 @@ public class AutonomousDemo extends LinearOpMode {
         sleep(2000);
         autoMove.stop();
 
-        /// TeleMove back at full power for 1 second, then stop
+        /// TeleMove back at full power for 1 robot, then stop
         autoMove.straight(1.0, 1.0);
     }
 }

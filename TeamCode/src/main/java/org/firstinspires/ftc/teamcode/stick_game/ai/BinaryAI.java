@@ -145,15 +145,21 @@ public class BinaryAI extends AI {
                 }
 
                 /// Check if the new binary contains any leading zeros and remove them
-                while (finalBinary.get(0) == 0) {
-                    finalBinary.remove(0);
+                boolean leadingZero = true;
+                List<Integer> clearedRowList = new ArrayList<>();
+                for (Integer bit : row) {
+                    if (bit == 0 && leadingZero) {
+                        continue;
+                    }
+
+                    leadingZero = false;
                 }
 
                 Integer indexOfMatchingRow = null;
                 for (int i = 0; i < manager.board().size(); i++) {
                     GameRow rowToCheck = manager.board().get(i);
 
-                    if (rowToCheck.binary().asList().equals(finalBinary)) {
+                    if (rowToCheck.binary().asList().equals(clearedRowList)) {
                         indexOfMatchingRow = i;
                         break;
                     }
