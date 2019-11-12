@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.stick_game.utils;
 
-import org.jetbrains.annotations.Contract;
-
 public class StickCoordinate {
 
     //region Constructor
@@ -20,7 +18,10 @@ public class StickCoordinate {
 
         int numberOfSticksInTargetRow = (2 * row) + 1;
 
-        if (stick < numberOfSticksInTargetRow) {
+        if (stick < 0) {
+            rowNumber = row;
+            stickNumber = 0;
+        } else if (stick < numberOfSticksInTargetRow) {
             rowNumber = row;
             stickNumber = stick;
         } else {
