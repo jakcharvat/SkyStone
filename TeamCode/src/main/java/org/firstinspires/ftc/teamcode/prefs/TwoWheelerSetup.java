@@ -12,6 +12,9 @@ public class TwoWheelerSetup {
         _rightMotor = hardwareMap.dcMotor.get("rightFrontMotor");
 
         _leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        _leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        _rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public DcMotor leftMotor() {

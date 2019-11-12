@@ -17,7 +17,7 @@ public class GamepadControlDemo extends LinearOpMode {
     /// This is where we declare private variables that we will use further on
     /// in the program
     private ElapsedTime runtime = new ElapsedTime();
-    private Move move;
+    private TeleMove teleMove;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -26,8 +26,8 @@ public class GamepadControlDemo extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        /// Get a reference to the [Move] class defined in the Move class.
-        move = new Move(hardwareMap);
+        /// Get a reference to the [TeleMove] class defined in the TeleMove class.
+        teleMove = new TeleMove(hardwareMap);
 
         /// Wait for the driver to start and reset the timer
         waitForStart();
@@ -39,8 +39,8 @@ public class GamepadControlDemo extends LinearOpMode {
             /*
             Get the value of the right stick along the y (up - down) axis
             (which is provided as a double between -1.0 and 1.0) and pass
-            it to [move.straight()] as the power parameter. This will update
-            the drive strength several times per second and ensure continuous
+            it to [teleMove.straight()] as the power parameter. This will update
+            the drive strength several times per robot and ensure continuous
             updates from the gamepad.
 
             There are issues with this, for example if the robot is top-heavy
@@ -49,7 +49,7 @@ public class GamepadControlDemo extends LinearOpMode {
             decelerates at some reasonable rate, or giving it a sorta gearbox
             and multiple speeds. I'll let you guys explore those possibilities
              */
-            move.straight(gamepad1.right_stick_y);
+            teleMove.straight(gamepad1.right_stick_y);
 
             /// Show the elapsed game time
             telemetry.addData("Status", "Run Time: " + runtime.toString());

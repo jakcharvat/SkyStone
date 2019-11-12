@@ -15,6 +15,11 @@ public class FourWheelerSetup {
 
         _leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         _leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        _leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        _rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        _leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        _rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
 
