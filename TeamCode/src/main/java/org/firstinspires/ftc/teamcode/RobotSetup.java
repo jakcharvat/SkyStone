@@ -41,14 +41,14 @@ public class RobotSetup {
      * @param hardwareMap
      */
     private void initBase(HardwareMap hardwareMap) {
-        leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
-        rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
-        leftBackMotor = hardwareMap.dcMotor.get("leftBackMotor");
-        rightBackMotor = hardwareMap.dcMotor.get("rightBackMotor");
-        perpendicularMotor = hardwareMap.dcMotor.get("perpendicularMotor");
-
-        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//        leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
+//        rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
+//        leftBackMotor = hardwareMap.dcMotor.get("leftBackMotor");
+//        rightBackMotor = hardwareMap.dcMotor.get("rightBackMotor");
+//        perpendicularMotor = hardwareMap.dcMotor.get("perpendicularMotor");
+//
+//        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     /**
@@ -58,8 +58,8 @@ public class RobotSetup {
      */
     private void initArm(HardwareMap hardwareMap) {
         armMotor = hardwareMap.dcMotor.get("armMotor");
-        armTouchSensor = hardwareMap.digitalChannel.get("armTouchSensor");
-        armServo = hardwareMap.servo.get("armServo");
+//        armTouchSensor = hardwareMap.digitalChannel.get("armTouchSensor");
+//        armServo = hardwareMap.servo.get("armServo");
         clawServo = hardwareMap.servo.get("clawServo");
     }
 

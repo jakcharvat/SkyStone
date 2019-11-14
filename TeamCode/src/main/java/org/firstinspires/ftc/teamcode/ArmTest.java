@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Arm Test", group = "Competition Robot")
 public class ArmTest extends LinearOpMode {
@@ -17,6 +18,8 @@ public class ArmTest extends LinearOpMode {
         robotSetup = new RobotSetup(hardwareMap);
         armController = new ArmController(robotSetup);
 
+        robotSetup.getClawServo().setDirection(Servo.Direction.FORWARD);
+
         waitForStart();
 
         while (opModeIsActive()) {
@@ -29,11 +32,15 @@ public class ArmTest extends LinearOpMode {
                 armController.runArmToHeight(currentHeight, false);
             }
             if (gamepad1.dpad_left) {
-                servoPosition += 0.01;
+                servoPosition += 0.1;
+                telemetry.addData("Servo", servoPosition);
+                telemetry.update();
                 robotSetup.getClawServo().setPosition(servoPosition);
             }
             if (gamepad1.dpad_right) {
-                servoPosition -= 0.01;
+                servoPosition -= 0.1;
+                telemetry.addData("Servo", servoPosition);
+                telemetry.update();
                 robotSetup.getClawServo().setPosition(servoPosition);
             }
         }
