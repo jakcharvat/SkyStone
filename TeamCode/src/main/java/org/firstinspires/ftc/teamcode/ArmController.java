@@ -29,18 +29,18 @@ class ArmController {
     /**
      * Ticks in the encoder of the motor raising and lowering the arm
      */
-    private static final double ARM_MOTOR_TICKS = 1440; //FIXME: Ensure this is actually correct
+    private static final double ARM_MOTOR_TICKS = 1120;
 
     /**
      * Circumference of the block the string raising and lowering the hand is wound up on.
      * Used to calculate by how much to rotate the motor to reach a certain height
      */
-    private static final double WIND_UP_COIL_CIRCUMFERENCE = 10.0; //FIXME: ditto
+    private static final double WIND_UP_COIL_CIRCUMFERENCE = 13.34;
 
     /**
      * Maximum possible height of the arm
      */
-    private static final double MAXIMUM_ARM_HEIGHT = 200.0;
+    private static final double MAXIMUM_ARM_HEIGHT = 49.3;
 
     /**
      * Ratio of the small and big gears driving the arm rotation
@@ -86,7 +86,7 @@ class ArmController {
      *
      * @param lowerFirst Whether the arm should be first lowered to the very bottom before being raised.
      *                   Might increase the precision of driving to the top
-     * @see MAXIMUM_ARM_HEIGHT
+//     * @see MAXIMUM_ARM_HEIGHT
      */
     void raiseArmToTop(boolean lowerFirst) {
 
@@ -94,7 +94,7 @@ class ArmController {
 
         final int ticks = calculateTicksToRaiseByDistance(MAXIMUM_ARM_HEIGHT - currentHeight);
 
-        utils.encoderMotorRun(robotSetup.getArmMotor(), ticks, ARM_MOTION_SPEED);
+        Utils.encoderMotorRun(robotSetup.getArmMotor(), ticks, ARM_MOTION_SPEED);
 
         currentHeight = MAXIMUM_ARM_HEIGHT;
     }
