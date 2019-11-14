@@ -3,13 +3,14 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "Arm Test")
-class ArmTest extends LinearOpMode {
+@TeleOp(name = "Arm Test", group = "Competition Robot")
+public class ArmTest extends LinearOpMode {
 
     private ArmController armController;
     private RobotSetup robotSetup;
 
     private double currentHeight = 0.0;
+    private double servoPosition = 0.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -26,6 +27,14 @@ class ArmTest extends LinearOpMode {
             if (gamepad1.dpad_down) {
                 currentHeight -= 10;
                 armController.runArmToHeight(currentHeight, false);
+            }
+            if (gamepad1.dpad_left) {
+                servoPosition += 0.01;
+                robotSetup.getClawServo().setPosition(servoPosition);
+            }
+            if (gamepad1.dpad_right) {
+                servoPosition -= 0.01;
+                robotSetup.getClawServo().setPosition(servoPosition);
             }
         }
     }
