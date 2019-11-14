@@ -24,25 +24,25 @@ public class ArmTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (gamepad1.dpad_up) {
-                currentHeight += 10;
+                currentHeight += 0.001;
                 armController.runArmToHeight(currentHeight, false);
             }
             if (gamepad1.dpad_down) {
-                currentHeight -= 10;
+                currentHeight -= 0.001;
                 armController.runArmToHeight(currentHeight, false);
             }
             if (gamepad1.dpad_left) {
-                servoPosition += 0.1;
-                telemetry.addData("Servo", servoPosition);
-                telemetry.update();
+                servoPosition += 0.0001;
                 robotSetup.getClawServo().setPosition(servoPosition);
             }
             if (gamepad1.dpad_right) {
-                servoPosition -= 0.1;
-                telemetry.addData("Servo", servoPosition);
-                telemetry.update();
+                servoPosition -= 0.0001;
                 robotSetup.getClawServo().setPosition(servoPosition);
             }
+
+            telemetry.addData("Servo", servoPosition);
+            telemetry.addData("Height", currentHeight);
+            telemetry.update();
         }
     }
 }
