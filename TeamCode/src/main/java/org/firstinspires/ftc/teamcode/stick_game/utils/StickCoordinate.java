@@ -14,7 +14,7 @@ public class StickCoordinate {
     private int stickNumber;
     //endregion
 
-    public void moveToStick(int row, int stick) {
+    public void moveTo(int row, int stick) {
 
         int numberOfSticksInTargetRow = (2 * row) + 1;
 

@@ -23,23 +23,15 @@ public class GameLoop extends LinearOpMode {
                 hasRobotStartedPlay = false;
                 if (gamepad1.dpad_right) {
                     manager.moveManager.moveRight();
-                    telemetry.addData("Moving", "Right");
-                    telemetry.update();
                 }
                 if (gamepad1.dpad_left) {
                     manager.moveManager.moveLeft();
-                    telemetry.addData("Moving", "Left");
-                    telemetry.update();
                 }
                 if (gamepad1.dpad_up && manager.rowBlock() == null) {
                     manager.moveManager.moveUp();
-                    telemetry.addData("Moving", "Up");
-                    telemetry.update();
                 }
                 if (gamepad1.dpad_down && manager.rowBlock() == null) {
                     manager.moveManager.moveDown();
-                    telemetry.addData("Moving", "Down");
-                    telemetry.update();
                 }
                 if (gamepad1.a) {
                     telemetry.addData("Removing Stick", "");
