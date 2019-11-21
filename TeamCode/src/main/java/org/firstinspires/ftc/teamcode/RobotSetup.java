@@ -59,7 +59,7 @@ public class RobotSetup {
     private void initArm(HardwareMap hardwareMap) {
         armMotor = hardwareMap.dcMotor.get("armMotor");
 //        armTouchSensor = hardwareMap.digitalChannel.get("armTouchSensor");
-//        armServo = hardwareMap.servo.get("armServo");
+        armServo = hardwareMap.servo.get("armServo");
         clawServo = hardwareMap.servo.get("clawServo");
     }
 

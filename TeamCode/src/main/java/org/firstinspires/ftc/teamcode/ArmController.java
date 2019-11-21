@@ -60,6 +60,16 @@ class ArmController {
     private static final double STANDARD_ARM_DOWN_ANGLE = Math.PI; //FIXME: As above
 
     /**
+     * Position of the claw servo where it can pick up a stone
+     */
+    static final double OPEN_SERVO_POSITION = 0.6;
+
+    /**
+     * Position of the claw servo where it's holding the stone with the lowest possible force
+     */
+    static final double CLOSE_SERVO_POSITION = 0.3;
+
+    /**
      * Keeps track of the height the arm is currently at. Used to calculate distance to raise / lower between
      * two positions or to the very top
      */
@@ -114,7 +124,7 @@ class ArmController {
         final double raiseDistance = targetHeight - currentHeight;
         final int ticks = calculateTicksToRaiseByDistance(raiseDistance);
 
-        utils.encoderMotorRun(robotSetup.getArmMotor(), ticks, ticks > 0 ? ARM_MOTION_SPEED : -ARM_MOTION_SPEED);
+        Utils.encoderMotorRun(robotSetup.getArmMotor(), ticks, ticks > 0 ? ARM_MOTION_SPEED : -ARM_MOTION_SPEED);
 
         currentHeight = targetHeight;
     }
