@@ -58,7 +58,7 @@ public class UtilFunctions {
         return new Offset(0, 0);
     }
 
-    @SuppressWarnings("SuspiciousNameCombination")
+    //@SuppressWarnings("SuspiciousNameCombination")
     public Power calculateMotorSettingsNeededToAchieveAngleAndPower(double angle, double power) {
 
         angle = angle - (Math.PI / 4);

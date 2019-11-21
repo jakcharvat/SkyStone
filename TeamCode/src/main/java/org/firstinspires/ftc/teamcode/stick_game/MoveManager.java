@@ -40,16 +40,31 @@ class MoveManager {
     private int verticalDistanceBetweenSticks = 15;
     private int horizontalDistanceBetweenSticks = 25;
 
-    private int ticksInRotation = 1120;
-    private double wheelCircumference = 10 * Math.PI;
+    public int ticksInRotation = 1120;
+    public double wheelCircumference = 10 * Math.PI;
     private int armHeight;
-
     private DcMotor leftFrontMotor;
     private DcMotor rightFrontMotor;
     private DcMotor leftBackMotor;
     private DcMotor rightBackMotor;
 //    private DcMotor upDownMotor;
 //    private DcMotor woundUpDownMotor;
+    public DcMotor getLeftFrontMotor() {
+        return leftFrontMotor;
+    }
+
+    public DcMotor getRightFrontMotor() {
+        return rightFrontMotor;
+    }
+
+    public DcMotor getLeftBackMotor() {
+        return leftBackMotor;
+    }
+
+    public DcMotor getRightBackMotor() {
+        return rightBackMotor;
+    }
+
 
     void moveLeft() {
         targetStick.moveTo(currentStick.rowNumber(), currentStick.stickNumber() - 1);
@@ -153,42 +168,26 @@ class MoveManager {
     }
 
     void knockStick() {
-
-        final UtilFunctions utilFunctions = new UtilFunctions();
-
-        for (int i = 0; i < 2; i++) {
-
-            double angle = i * Math.PI;
-
-            Power power = utilFunctions.calculateMotorSettingsNeededToAchieveAngleAndPower(angle, 0.25);
-            final double lfPower = power.getLeftFront();
-            final double lbPower = power.getLeftBack();
-            final double rfPower = power.getRightFront();
-            final double rbPower = power.getRightBack();
-            final double[] powers = new double[]{lfPower, lbPower, rfPower, rbPower};
-
-            DcMotor[] motors = new DcMotor[]{leftFrontMotor, leftBackMotor, rightFrontMotor, rightBackMotor};
-            int ticks = Math.round(ticksInRotation / 6);
-
-            for (int j = 0; j < motors.length; j++) {
-                DcMotor motor = motors[j];
-                motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motor.setTargetPosition(powers[j] < 0 ? -ticks : ticks);
-                motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            }
-
-            for (int j = 0; j < motors.length; j++) {
-                double motorPower = powers[j];
-                DcMotor motor = motors[j];
-                motor.setPower(motorPower);
-            }
-
-            for (DcMotor motor : motors) {
-                while(motor.isBusy()) { }
-                motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
+        DcMotor[] motors = new DcMotor[]{leftBackMotor, rightBackMotor};
+        final int distanceFromShelf = 10;
+        final double calculatedTargetPosition = ((distanceFromShelf*Math.sqrt(2.00))/wheelCircumference)*ticksInRotation;
+        for(int i = 0;i < motors.length; i++){
+            DcMotor motor = motors[i];
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setTargetPosition((int)calculatedTargetPosition);
+            motor.setPower(0.5);
+            while(motor.isBusy()){}
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
+        for(int i = 0;i < motors.length; i++){
+            DcMotor motor = motors[i];
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setTargetPosition(-(int)calculatedTargetPosition);
+            motor.setPower(0.5);
+            while(motor.isBusy()){}
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+
     }
 
     public StickCoordinate currentStick() {

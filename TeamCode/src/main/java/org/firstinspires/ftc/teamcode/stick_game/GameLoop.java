@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.stick_game;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.stick_game.ai.AI;
 import org.firstinspires.ftc.teamcode.stick_game.ai.BinaryAI;
@@ -49,7 +51,26 @@ public class GameLoop extends LinearOpMode {
 
                     Thread.sleep(1000);
 
-                    manager.remove(manager.moveManager.currentStick().rowNumber(), manager.moveManager.currentStick().stickNumber());
+                    MoveManager moveManager = new MoveManager(hardwareMap, telemetry);
+                    DcMotor[] motors = new DcMotor[]{moveManager.getLeftBackMotor(), moveManager.getRightBackMotor()};
+                    final int distanceFromShelf = 10;
+                    final double calculatedTargetPosition = ((distanceFromShelf*Math.sqrt(2.00))/moveManager.wheelCircumference)*moveManager.ticksInRotation;
+                    for(int i = 0;i < motors.length; i++){
+                        DcMotor motor = motors[i];
+                        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                        motor.setTargetPosition((int)calculatedTargetPosition);
+                        motor.setPower(0.5);
+                        while(motor.isBusy()){}
+                        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    }
+                    for(int i = 0;i < motors.length; i++){
+                        DcMotor motor = motors[i];
+                        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                        motor.setTargetPosition(-(int)calculatedTargetPosition);
+                        motor.setPower(0.5);
+                        while(motor.isBusy()){}
+                        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    }
 
                     telemetry.addData("Stick Removed", "");
                     telemetry.update();
