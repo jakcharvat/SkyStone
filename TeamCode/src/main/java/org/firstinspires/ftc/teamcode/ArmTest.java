@@ -46,6 +46,7 @@ public class ArmTest extends LinearOpMode {
             } else if (!gamepad1.dpad_down) downPressed = false;
 
             telemetry.addData("Arm Servo", armPosition);
+            telemetry.addData("Arm Position", robotSetup.getArmServo().getPosition());
             telemetry.addData("upPressed", upPressed);
             telemetry.addData("downPressed", downPressed);
             telemetry.update();
