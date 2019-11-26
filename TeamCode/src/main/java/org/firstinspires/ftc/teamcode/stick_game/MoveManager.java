@@ -37,7 +37,7 @@ class MoveManager {
     private StickCoordinate currentStick = new StickCoordinate(3, 0);
     private StickCoordinate targetStick = new StickCoordinate(3, 0);
 
-    private int distanceFromShelf = 5;
+    private int distanceFromShelf = 50;
     private int verticalDistanceBetweenSticks = 15;
     private int horizontalDistanceBetweenSticks = 25;
 
@@ -175,24 +175,22 @@ class MoveManager {
         for(DcMotor motor : motors) {
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setTargetPosition(motor == rightFrontMotor || motor == leftBackMotor ? distance : -distance);
+            motor.setTargetPosition(motor == leftBackMotor || motor == leftFrontMotor ? distance : -distance);
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
         for (DcMotor motor : motors) {
-            motor.setPower(motor == rightFrontMotor || motor == leftBackMotor ? 0.5 : -0.5);
+            motor.setPower(motor == leftFrontMotor || motor == leftBackMotor ? 0.5 : -0.5);
         }
-
-        for(DcMotor motor : motors) {
-            while(motor.isBusy());
-
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setTargetPosition(0);
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
+            for(DcMotor motor : motors) {
+                while(motor.isBusy());
+                motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motor.setTargetPosition(0);
+                motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
 
         for (DcMotor motor : motors) {
-            motor.setPower(motor == rightBackMotor || motor == leftFrontMotor ? 0.5 : -0.5);
+            motor.setPower(motor == rightFrontMotor || motor == rightBackMotor ? 0.5 : -0.5);
         }
 
         for(DcMotor motor : motors) {
@@ -207,5 +205,5 @@ class MoveManager {
 
 enum MoveDirection {
     leftRight,
-    upDown,
+    upDown
 }
