@@ -36,67 +36,7 @@ public class GameLoop extends LinearOpMode {
                     manager.moveManager.moveDown();
                 }
                 if (gamepad1.a) {
-                    telemetry.addData("Removing Stick", "");
-                    telemetry.update();
-
-                    Thread.sleep(1000);
-
-                    telemetry.addData("Removing Stick", manager.moveManager.currentStick().rowNumber());
-                    telemetry.update();
-
-                    Thread.sleep(1000);
-
-                    telemetry.addData("Removing Stick", manager.moveManager.currentStick().stickNumber());
-                    telemetry.update();
-
-                    Thread.sleep(1000);
-
-                    MoveManager moveManager = new MoveManager(hardwareMap, telemetry);
-
-                    DcMotor leftBackMotor = moveManager.getLeftBackMotor();
-                    DcMotor rightBackMotor = moveManager.getRightBackMotor();
-
-                    DcMotor leftFrontMotor = moveManager.getLeftFrontMotor();
-                    DcMotor rightFrontMotor = moveManager.getRightFrontMotor();
-
-                    final int distanceFromShelf = 5;
-                    final double calculatedTargetPosition = ((distanceFromShelf*Math.sqrt(2.00))/moveManager.wheelCircumference)*moveManager.ticksInRotation;
-
-                    leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                    leftBackMotor.setTargetPosition((int)calculatedTargetPosition);
-                    rightBackMotor.setTargetPosition(-(int)calculatedTargetPosition);
-
-                    leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                    leftBackMotor.setPower(0.5);
-                    rightBackMotor.setPower(-0.5);
-
-                    while(leftBackMotor.isBusy() && rightBackMotor.isBusy()){}
-
-                    leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                    leftFrontMotor.setTargetPosition((int)calculatedTargetPosition);
-                    rightFrontMotor.setTargetPosition(-(int)calculatedTargetPosition);
-
-                    leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                    leftFrontMotor.setPower(0.5);
-                    rightFrontMotor.setPower(-0.5);
-
-                    while(leftFrontMotor.isBusy() && rightFrontMotor.isBusy()){}
-
-                    leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                    telemetry.addData("Stick Removed", "");
-                    telemetry.update();
-
-                    Thread.sleep(1000);
+                    manager.removeCurrentStick();
                 }
                 if (gamepad1.left_trigger > 0.7) {
                     manager.handoffPlayer();

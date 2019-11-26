@@ -37,6 +37,7 @@ class MoveManager {
     private StickCoordinate currentStick = new StickCoordinate(3, 0);
     private StickCoordinate targetStick = new StickCoordinate(3, 0);
 
+    private int distanceFromShelf = 5;
     private int verticalDistanceBetweenSticks = 15;
     private int horizontalDistanceBetweenSticks = 25;
 
@@ -168,26 +169,35 @@ class MoveManager {
     }
 
     void knockStick() {
-        DcMotor[] motors = new DcMotor[]{leftBackMotor, rightBackMotor};
-        final int distanceFromShelf = 10;
-        final double calculatedTargetPosition = ((distanceFromShelf*Math.sqrt(2.00))/wheelCircumference)*ticksInRotation;
-        for(int i = 0;i < motors.length; i++){
-            DcMotor motor = motors[i];
+        final DcMotor[] motors = {leftFrontMotor, leftBackMotor, rightFrontMotor, rightBackMotor};
+        final int distance = (int) ( distanceFromShelf * Math.sqrt(2) / wheelCircumference) * ticksInRotation;
+
+        for(DcMotor motor : motors) {
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setTargetPosition((int)calculatedTargetPosition);
-            motor.setPower(0.5);
-            while(motor.isBusy()){}
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
-        for(int i = 0;i < motors.length; i++){
-            DcMotor motor = motors[i];
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setTargetPosition(-(int)calculatedTargetPosition);
-            motor.setPower(0.5);
-            while(motor.isBusy()){}
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setTargetPosition(motor == rightFrontMotor || motor == leftBackMotor ? distance : -distance);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
+        for (DcMotor motor : motors) {
+            motor.setPower(motor == rightFrontMotor || motor == leftBackMotor ? 0.5 : -0.5);
+        }
+
+        for(DcMotor motor : motors) {
+            while(motor.isBusy());
+
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setTargetPosition(0);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+
+        for (DcMotor motor : motors) {
+            motor.setPower(motor == rightBackMotor || motor == leftFrontMotor ? 0.5 : -0.5);
+        }
+
+        for(DcMotor motor : motors) {
+            while(motor.isBusy());
+        }
     }
 
     public StickCoordinate currentStick() {

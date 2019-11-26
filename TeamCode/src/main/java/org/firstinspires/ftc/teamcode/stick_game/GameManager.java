@@ -59,6 +59,10 @@ public class GameManager {
         checkIfGameFinished();
     }
 
+    public void removeCurrentStick() {
+        board.get(moveManager.currentStick().rowNumber()).remove(moveManager.currentStick().stickNumber());
+    }
+
     public void removeAllToTheRight(int row, int stick) {
         board.get(row).removeAllToRight(stick);
 
