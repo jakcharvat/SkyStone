@@ -10,13 +10,17 @@ abstract class TeleLinearOpMode extends BaseLinearOpMode {
      * @param power desired power of the motor as a double between -1.0 and 1.0
      */
     void straight(final double power) {
-        setPowerOnAll(power);
+        setPowerOnMain(power);
+    }
+
+    void gamepadDrive(double x, double y) {
+
     }
 
     /**
      * Immediately stop all motion of the robot
      */
     void stopMotion() {
-        setPowerOnAll(0.0);
+        setPowerOnMain(0.0);
     }
 }

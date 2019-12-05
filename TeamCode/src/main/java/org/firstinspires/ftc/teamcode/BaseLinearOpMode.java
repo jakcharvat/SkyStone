@@ -12,19 +12,26 @@ abstract class BaseLinearOpMode extends LinearOpMode {
     /// Declare a variable that will hold references to all the motors and sensors on the robot
     RobotSetup robotSetup;
 
-    void setPowerOnAll(double power) {
-        setPowerOn(power, power);
+    /**
+     * Sets the power on the four main movement motors (excluding the perpendicular motor)
+     *
+     * @param power
+     */
+    void setPowerOnMain(double power) {
+        setPowerOn(power, power, 0.0);
     }
 
-    private void setPowerOn(double left, double right) {
+    private void setPowerOn(double left, double right, double perpendicular) {
 
         left = Range.clip(left, -1.0, 1.0);
         right = Range.clip(right, -1.0, 1.0);
+        perpendicular = Range.clip(perpendicular, -1.0, 1.0);
 
         robotSetup.getLeftFrontMotor().setPower(left);
         robotSetup.getRightFrontMotor().setPower(right);
         robotSetup.getLeftBackMotor().setPower(left);
         robotSetup.getRightBackMotor().setPower(right);
+        robotSetup.getPerpendicularMotor().setPower(perpendicular);
     }
 
     abstract void opModeCycle() throws InterruptedException;
