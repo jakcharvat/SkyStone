@@ -92,7 +92,7 @@ public class ConceptVuforiaSkyStoneNavigation extends LinearOpMode {
     // NOTE: If you are running on a CONTROL HUB, with only one USB WebCam, you must select CAMERA_CHOICE = BACK; and PHONE_IS_PORTRAIT = false;
     //
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
-    private static final boolean PHONE_IS_PORTRAIT = false  ;
+    private static final boolean PHONE_IS_PORTRAIT = true  ;
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -142,20 +142,31 @@ public class ConceptVuforiaSkyStoneNavigation extends LinearOpMode {
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
          * If no camera monitor is desired, use the parameter-less constructor instead (commented out below).
          */
+        telemetry.addData("1", "1");
+        telemetry.update();
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        telemetry.addData("1", "2");
+        telemetry.update();
 
         // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection   = CAMERA_CHOICE;
+        telemetry.addData("1", "3");
+        telemetry.update();
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        telemetry.addData("1", "4");
+        telemetry.update();
+        System.out.println(1);
 
         // Load the data sets for the trackable objects. These particular data
         // sets are stored in the 'assets' part of our application.
         VuforiaTrackables targetsSkyStone = this.vuforia.loadTrackablesFromAsset("Skystone");
+        telemetry.addData("1", "5");
+        telemetry.update();
 
         VuforiaTrackable stoneTarget = targetsSkyStone.get(0);
         stoneTarget.setName("Stone Target");
@@ -183,10 +194,14 @@ public class ConceptVuforiaSkyStoneNavigation extends LinearOpMode {
         rear1.setName("Rear Perimeter 1");
         VuforiaTrackable rear2 = targetsSkyStone.get(12);
         rear2.setName("Rear Perimeter 2");
+        telemetry.addData("1", "6");
+        telemetry.update();
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
         List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
         allTrackables.addAll(targetsSkyStone);
+        telemetry.addData("1", "7");
+        telemetry.update();
 
         /**
          * In order for localization to work, we need to tell the system where each target is on the field, and
@@ -263,6 +278,9 @@ public class ConceptVuforiaSkyStoneNavigation extends LinearOpMode {
                 .translation(halfField, -quadField, mmTargetHeight)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90)));
 
+        telemetry.addData("1", "8");
+        telemetry.update();
+
         //
         // Create a transformation matrix describing where the phone is on the robot.
         //
@@ -289,6 +307,9 @@ public class ConceptVuforiaSkyStoneNavigation extends LinearOpMode {
             phoneXRotate = 90 ;
         }
 
+        telemetry.addData("1", "9");
+        telemetry.update();
+
         // Next, translate the camera lens to where it is on the robot.
         // In this example, it is centered (left to right), but forward of the middle of the robot, and above ground level.
         final float CAMERA_FORWARD_DISPLACEMENT  = 4.0f * mmPerInch;   // eg: Camera is 4 Inches in front of robot center
@@ -304,6 +325,9 @@ public class ConceptVuforiaSkyStoneNavigation extends LinearOpMode {
             ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, parameters.cameraDirection);
         }
 
+        telemetry.addData("1", "10");
+        telemetry.update();
+
         // WARNING:
         // In this sample, we do not wait for PLAY to be pressed.  Target Tracking is started immediately when INIT is pressed.
         // This sequence is used to enable the new remote DS Camera Preview feature to be used with this sample.
@@ -317,6 +341,10 @@ public class ConceptVuforiaSkyStoneNavigation extends LinearOpMode {
         // Tap the preview window to receive a fresh image.
 
         targetsSkyStone.activate();
+
+        telemetry.addData("1", "11");
+        telemetry.update();
+
         while (!isStopRequested()) {
 
             // check all the trackable targets to see which one (if any) is visible.

@@ -14,6 +14,8 @@ class Utils {
      * @param power How much power to apply to the motor - expressed as a double between -1 and 1
      */
     static void encoderMotorRun(DcMotor motor, int ticks, double power) {
+        motor.setPower(0);
+
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setTargetPosition(ticks);
@@ -22,8 +24,6 @@ class Utils {
         motor.setPower(power);
 
         while (motor.isBusy());
-
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     /**

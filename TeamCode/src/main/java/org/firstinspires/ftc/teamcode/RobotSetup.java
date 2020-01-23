@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class RobotSetup {
 
@@ -20,9 +19,16 @@ public class RobotSetup {
 
     //region Arm
     private DcMotor armMotor;
-    private DigitalChannel armTouchSensor;
+    private TouchSensor armTouchSensor;
     private Servo armServo;     /// Controls the angle of the portion of the arm holding the claw
     private Servo clawServo;    /// Controls the opening and closing of the claw
+    //endregion
+
+    //region Collection
+    private DcMotor rightCollectionMotor;
+    private DcMotor leftCollectionMotor;
+    private Servo rightCollectionServo;
+    private Servo leftCollectionServo;
     //endregion
 
 
@@ -34,6 +40,7 @@ public class RobotSetup {
     RobotSetup(HardwareMap hardwareMap) {
         initBase(hardwareMap);
         initArm(hardwareMap);
+        initCollection(hardwareMap);
     }
 
     /**
@@ -42,14 +49,14 @@ public class RobotSetup {
      * @param hardwareMap
      */
     private void initBase(HardwareMap hardwareMap) {
-//        leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
-//        rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
-//        leftBackMotor = hardwareMap.dcMotor.get("leftBackMotor");
-//        rightBackMotor = hardwareMap.dcMotor.get("rightBackMotor");
-//        perpendicularMotor = hardwareMap.dcMotor.get("perpendicularMotor");
-//
-//        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-//        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
+        rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
+        leftBackMotor = hardwareMap.dcMotor.get("leftBackMotor");
+        rightBackMotor = hardwareMap.dcMotor.get("rightBackMotor");
+        perpendicularMotor = hardwareMap.dcMotor.get("perpendicularMotor");
+
+        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     /**
@@ -59,9 +66,17 @@ public class RobotSetup {
      */
     private void initArm(HardwareMap hardwareMap) {
         armMotor = hardwareMap.dcMotor.get("armMotor");
-//        armTouchSensor = hardwareMap.digitalChannel.get("armTouchSensor");
+        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        armTouchSensor = hardwareMap.touchSensor.get("armTouchSensor");
         armServo = hardwareMap.servo.get("armServo");
         clawServo = hardwareMap.servo.get("clawServo");
+    }
+
+    private void initCollection(HardwareMap hardwareMap) {
+        rightCollectionMotor = hardwareMap.dcMotor.get("rightCollectionMotor");
+        leftCollectionMotor = hardwareMap.dcMotor.get("leftCollectionMotor");
+        rightCollectionServo = hardwareMap.servo.get("rightCollectionServo");
+        leftCollectionServo = hardwareMap.servo.get("leftCollectionServo");
     }
 
     //MARK: getters
@@ -76,7 +91,12 @@ public class RobotSetup {
     DcMotor getPerpendicularMotor() { return perpendicularMotor; }
 
     DcMotor getArmMotor() { return armMotor; }
-    DigitalChannel getArmTouchSensor() { return armTouchSensor; }
+    TouchSensor getArmTouchSensor() { return armTouchSensor; }
     Servo getArmServo() { return armServo; }
     Servo getClawServo() { return clawServo; }
+
+    DcMotor getRightCollectionMotor() { return rightCollectionMotor; }
+    DcMotor getLeftCollectionMotor() { return leftCollectionMotor; }
+    Servo getRightCollectionServo() { return rightCollectionServo; }
+    Servo getLeftCollectionServo() { return leftCollectionServo; }
 }

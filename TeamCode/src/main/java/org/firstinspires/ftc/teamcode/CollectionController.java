@@ -1,7 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.robot.Robot;
+
+import org.firstinspires.ftc.ftccommon.internal.RunOnBoot;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 @SuppressWarnings("StatementWithEmptyBody")
-class ArmController {
+class CollectionController {
 
     /**
      * Class that handles all the actions of the robot's arm, including raising and lowering it,
@@ -10,9 +18,18 @@ class ArmController {
      *
      * @param robotSetup
      */
-    ArmController(RobotSetup robotSetup) {
+    CollectionController(RobotSetup robotSetup) {
         this.robotSetup = robotSetup;
     }
+
+    /**
+     * Class that handles all the actions of the robot's arm, including raising and lowering it,
+     * picking up blocks and placing them on the tower. Also controls the pickup mechanism
+     * and the claw.
+     *
+     * @param hardwareMap
+     */
+    CollectionController(HardwareMap hardwareMap) { this.robotSetup = new RobotSetup(hardwareMap); }
 
     private RobotSetup robotSetup;
 
@@ -24,7 +41,7 @@ class ArmController {
      * The speed of the arm when moving both up and down, regardless of the distance to travel.
      * Positive should represent winding up the string, therefore moving the arm up, negative down.
      */
-    private static final double ARM_MOTION_SPEED = 0.5;
+    private static final double ARM_MOTION_SPEED = 0.2;
 
     /**
      * Ticks in the encoder of the motor raising and lowering the arm
@@ -40,7 +57,7 @@ class ArmController {
     /**
      * Maximum possible height of the arm
      */
-    private static final double MAXIMUM_ARM_HEIGHT = 49.3;
+    private static final double MAXIMUM_ARM_HEIGHT = 68;
 
     /**
      * Ratio of the small and big gears driving the arm rotation
@@ -62,18 +79,75 @@ class ArmController {
     /**
      * Position of the claw servo where it can pick up a stone
      */
-    static final double OPEN_SERVO_POSITION = 0.6;
+    private static final double OPEN_SERVO_POSITION = 0.6;
 
     /**
      * Position of the claw servo where it's holding the stone with the lowest possible force
      */
-    static final double CLOSE_SERVO_POSITION = 0.3;
+    private static final double CLOSE_SERVO_POSITION = 0.3;
+
+    /**
+     * 
+     */
+    private static final double COLLECTION_MOTOR_SPEED = 0.5;
 
     /**
      * Keeps track of the height the arm is currently at. Used to calculate distance to raise / lower between
      * two positions or to the very top
      */
     private double currentHeight = 0.0;
+
+    private boolean downPressed = false;
+    private boolean upPressed = false;
+    private boolean aPressed = false;
+
+    void gamepadHandler(Gamepad gamepad, Telemetry telemetry) {
+        if (gamepad.dpad_up) runArm(LiftDiection.UP);
+        else if (gamepad.dpad_down) runArm(LiftDiection.DOWN);
+        else runArm(LiftDiection.STOP);
+
+        if (gamepad.a) {
+            if (aPressed) return;
+
+            lowerArmToBottom();
+            aPressed = true;
+        } else {
+            aPressed = false;
+        }
+
+        if (gamepad.x) {
+            closeClaw();
+        } else if (gamepad.b) {
+            openClaw();
+        }
+
+
+
+        telemetry.addData("Touch: ", getRobotSetup().getArmTouchSensor().isPressed());
+        telemetry.addData("Dir: ", getRobotSetup().getArmMotor().getDirection());
+        telemetry.addData("Height: ", getCurrentHeight());
+        telemetry.update();
+    }
+
+    void runArm(LiftDiection d) {
+        switch (d) {
+            case UP:
+                robotSetup.getArmMotor().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robotSetup.getArmMotor().setPower(ARM_MOTION_SPEED);
+                break;
+            case DOWN:
+                robotSetup.getArmMotor().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robotSetup.getArmMotor().setPower(-ARM_MOTION_SPEED);
+                break;
+            case STOP:
+                robotSetup.getArmMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robotSetup.getArmMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robotSetup.getArmMotor().setTargetPosition(0);
+                robotSetup.getArmMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robotSetup.getArmMotor().setPower(ARM_MOTION_SPEED);
+                break;
+        }
+    }
 
     /**
      * Lower the arm to the very bottom. Uses the touch sensor to ensure the arm is always in the exact
@@ -82,13 +156,24 @@ class ArmController {
     void lowerArmToBottom() {
 
         /// If the touch sensor is already pressed stop the execution of the method
-        if (robotSetup.getArmTouchSensor().getState()) return;
+        if (robotSetup.getArmTouchSensor().isPressed()) return;
 
+        robotSetup.getArmMotor().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robotSetup.getArmMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotSetup.getArmMotor().setPower(-ARM_MOTION_SPEED);
-        while (!robotSetup.getArmTouchSensor().getState());
+        while (!robotSetup.getArmTouchSensor().isPressed());
         robotSetup.getArmMotor().setPower(0);
+        robotSetup.getArmMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         currentHeight = 0.0;
+    }
+
+    void openClaw() {
+        robotSetup.getClawServo().setPosition(OPEN_SERVO_POSITION);
+    }
+
+    void closeClaw() {
+        robotSetup.getClawServo().setPosition(CLOSE_SERVO_POSITION);
     }
 
     /**
@@ -129,6 +214,11 @@ class ArmController {
         currentHeight = targetHeight;
     }
 
+    /// Workaround for Java not supporting optional parameters with default values
+    void runArmToHeight(double targetHeight) {
+        runArmToHeight(targetHeight, false);
+    }
+
     /**
      * Convert a distance the arm should move into ticks in the motor.
      *
@@ -144,5 +234,37 @@ class ArmController {
         return (int) Math.round(ticks);
     }
 
+    void rotateArm(ArmDirection d) {
+        if (d == ArmDirection.BOTTOM) {
+            robotSetup.getArmServo().setPosition(STANDARD_ARM_DOWN_ANGLE);
+            return;
+        }
 
+        robotSetup.getArmServo().setPosition(STANDARD_ARM_UP_ANGLE);
+    }
+
+    void runCollection() throws InterruptedException {
+        robotSetup.getRightCollectionMotor().setPower(COLLECTION_MOTOR_SPEED);
+        robotSetup.getLeftCollectionMotor().setPower(-COLLECTION_MOTOR_SPEED);
+
+        wait(1000);
+
+        robotSetup.getRightCollectionMotor().setPower(0);
+        robotSetup.getLeftCollectionMotor().setPower(0);
+    }
+
+    double getCurrentHeight() { return currentHeight; }
+
+    RobotSetup getRobotSetup() { return robotSetup; }
+}
+
+enum ArmDirection {
+    BOTTOM,
+    FORWARD
+}
+
+enum LiftDiection {
+    UP,
+    DOWN,
+    STOP
 }

@@ -21,6 +21,14 @@ abstract class BaseLinearOpMode extends LinearOpMode {
         setPowerOn(power, power, 0.0);
     }
 
+    void setPowerOnMainAndPerpendicular(double power, double perpendicular) {
+        setPowerOn(power, power, perpendicular);
+    }
+
+    void setTurnPower(double turn) {
+        setPowerOn(turn, -turn, 0);
+    }
+
     private void setPowerOn(double left, double right, double perpendicular) {
 
         left = Range.clip(left, -1.0, 1.0);

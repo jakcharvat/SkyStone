@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.Range;
+
 abstract class TeleLinearOpMode extends BaseLinearOpMode {
     /**
      * Starts moving the robot straight
@@ -13,8 +16,25 @@ abstract class TeleLinearOpMode extends BaseLinearOpMode {
         setPowerOnMain(power);
     }
 
-    void gamepadDrive(double x, double y) {
+    void gamepadDrive(Gamepad gamepad) {
+        double x = gamepad.right_stick_x, y = gamepad.right_stick_y, turn = normalizeTurn(gamepad.left_stick_x);
 
+        if (turn != 0) {
+            setTurnPower(turn);
+            return;
+        }
+
+        setPowerOnMainAndPerpendicular(y, x);
+    }
+
+    private double normalizeTurn(double t) {
+        t = Range.clip(t, -1, 1);
+
+        if (t > 0) {
+            return Range.clip((t - 0.5) * 2, 0, 1);
+        }
+
+        return Range.clip((t + 0.5) * 2, -1, 0);
     }
 
     /**
