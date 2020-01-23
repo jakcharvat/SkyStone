@@ -87,7 +87,7 @@ class CollectionController {
     private static final double CLOSE_SERVO_POSITION = 0.3;
 
     /**
-     * 
+     * Speed of the collection mechanism //FIXME: ensure this isn't too fast
      */
     private static final double COLLECTION_MOTOR_SPEED = 0.5;
 
@@ -97,11 +97,9 @@ class CollectionController {
      */
     private double currentHeight = 0.0;
 
-    private boolean downPressed = false;
-    private boolean upPressed = false;
     private boolean aPressed = false;
 
-    void gamepadHandler(Gamepad gamepad, Telemetry telemetry) {
+    void gamepadHandler(Gamepad gamepad, Telemetry telemetry) throws InterruptedException {
         if (gamepad.dpad_up) runArm(LiftDiection.UP);
         else if (gamepad.dpad_down) runArm(LiftDiection.DOWN);
         else runArm(LiftDiection.STOP);
@@ -111,22 +109,22 @@ class CollectionController {
 
             lowerArmToBottom();
             aPressed = true;
-        } else {
-            aPressed = false;
-        }
+        } else aPressed = false;
 
-        if (gamepad.x) {
-            closeClaw();
-        } else if (gamepad.b) {
-            openClaw();
-        }
+        if (gamepad.x) closeClaw();
+        else if (gamepad.b) openClaw();
 
+        if (gamepad.y) runCollection();
 
+        if (gamepad.dpad_left) rotateArm(ArmDirection.FORWARD);
+        if (gamepad.dpad_right) rotateArm(ArmDirection.BOTTOM);
 
+        /*
         telemetry.addData("Touch: ", getRobotSetup().getArmTouchSensor().isPressed());
         telemetry.addData("Dir: ", getRobotSetup().getArmMotor().getDirection());
         telemetry.addData("Height: ", getCurrentHeight());
         telemetry.update();
+        */
     }
 
     void runArm(LiftDiection d) {
