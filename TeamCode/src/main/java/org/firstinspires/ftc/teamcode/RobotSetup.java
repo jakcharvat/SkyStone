@@ -29,6 +29,8 @@ public class RobotSetup {
     private DcMotor leftCollectionMotor;
     private Servo rightCollectionServo;
     private Servo leftCollectionServo;
+    private Servo rightFoundationServo;
+    private Servo leftFoundationServo;
     //endregion
 
 
@@ -75,8 +77,13 @@ public class RobotSetup {
     private void initCollection(HardwareMap hardwareMap) {
         rightCollectionMotor = hardwareMap.dcMotor.get("rightCollectionMotor");
         leftCollectionMotor = hardwareMap.dcMotor.get("leftCollectionMotor");
+
+        rightCollectionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
         rightCollectionServo = hardwareMap.servo.get("rightCollectionServo");
         leftCollectionServo = hardwareMap.servo.get("leftCollectionServo");
+        rightFoundationServo = hardwareMap.servo.get("rightFoundationServo");
+        leftFoundationServo = hardwareMap.servo.get("leftFoundationServo");
     }
 
     //MARK: getters
@@ -99,4 +106,6 @@ public class RobotSetup {
     DcMotor getLeftCollectionMotor() { return leftCollectionMotor; }
     Servo getRightCollectionServo() { return rightCollectionServo; }
     Servo getLeftCollectionServo() { return leftCollectionServo; }
+    Servo getRightFoundationServo() { return rightFoundationServo; }
+    Servo getLeftFoundationServo() { return leftFoundationServo; }
 }

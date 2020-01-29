@@ -3,9 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.robot.Robot;
-
-import org.firstinspires.ftc.ftccommon.internal.RunOnBoot;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @SuppressWarnings("StatementWithEmptyBody")
@@ -69,40 +66,55 @@ class CollectionController {
      * which the stone is a standard length away from the robot and also a standard
      * height in relation to how much the arm was risen
      */
-    private static final double STANDARD_ARM_UP_ANGLE = 3 * Math.PI / 2;
+    private static final double STANDARD_ARM_UP_ANGLE = 0.6;
 
     /**
      * Angle in which the arm is in a standard down position ready to pick up a stone
      */
-    private static final double STANDARD_ARM_DOWN_ANGLE = Math.PI; //FIXME: As above
+    private static final double STANDARD_ARM_DOWN_ANGLE = 1.0; //FIXME: As above
 
     /**
      * Position of the claw servo where it can pick up a stone
      */
-    private static final double OPEN_SERVO_POSITION = 0.6;
+    private static final double OPEN_SERVO_POSITION = 0.4;
 
     /**
      * Position of the claw servo where it's holding the stone with the lowest possible force
      */
-    private static final double CLOSE_SERVO_POSITION = 0.3;
+    private static final double CLOSE_SERVO_POSITION = 0.75;
+
+    private static final double LEFT_FOUNDATION_SERVO_UP = 0.1;
+    private static final double LEFT_FOUNDATION_SERVO_DOWN = 0.44;
+
+    private static final double RIGHT_FOUNDATION_SERVO_UP = 1.0;
+    private static final double RIGHT_FOUNDATION_SERVO_DOWN = 0.66;
 
     /**
      * Speed of the collection mechanism //FIXME: ensure this isn't too fast
      */
-    private static final double COLLECTION_MOTOR_SPEED = 0.5;
+    private static final double COLLECTION_MOTOR_SPEED = 0.73;
 
     /**
      * Keeps track of the height the arm is currently at. Used to calculate distance to raise / lower between
      * two positions or to the very top
      */
     private double currentHeight = 0.0;
+    private FoundationPosition foundationPosition = FoundationPosition.TOP;
 
     private boolean aPressed = false;
+    private boolean isStopped = false;
 
     void gamepadHandler(Gamepad gamepad, Telemetry telemetry) throws InterruptedException {
-        if (gamepad.dpad_up) runArm(LiftDiection.UP);
-        else if (gamepad.dpad_down) runArm(LiftDiection.DOWN);
-        else runArm(LiftDiection.STOP);
+        if (gamepad.dpad_up) {
+            runArm(LiftDiection.UP);
+            isStopped = false;
+        } else if (gamepad.dpad_down) {
+            runArm(LiftDiection.DOWN);
+            isStopped = false;
+        } else if (!isStopped) {
+            runArm(LiftDiection.STOP);
+            isStopped = true;
+        }
 
         if (gamepad.a) {
             if (aPressed) return;
@@ -114,17 +126,20 @@ class CollectionController {
         if (gamepad.x) closeClaw();
         else if (gamepad.b) openClaw();
 
-        if (gamepad.y) runCollection();
+        if (gamepad.right_trigger > 0.5) setCollectionMode(true); else setCollectionMode(false);
 
         if (gamepad.dpad_left) rotateArm(ArmDirection.FORWARD);
         if (gamepad.dpad_right) rotateArm(ArmDirection.BOTTOM);
 
-        /*
+        if (gamepad.right_bumper) toggleFoundation();
+
         telemetry.addData("Touch: ", getRobotSetup().getArmTouchSensor().isPressed());
         telemetry.addData("Dir: ", getRobotSetup().getArmMotor().getDirection());
         telemetry.addData("Height: ", getCurrentHeight());
+        telemetry.addData("left Foundation:", robotSetup.getLeftFoundationServo().getPosition());
+        telemetry.addData("right Foundation:", robotSetup.getRightFoundationServo().getPosition());
+        telemetry.addData("arm: ", robotSetup.getArmServo().getPosition());
         telemetry.update();
-        */
     }
 
     void runArm(LiftDiection d) {
@@ -241,14 +256,30 @@ class CollectionController {
         robotSetup.getArmServo().setPosition(STANDARD_ARM_UP_ANGLE);
     }
 
-    void runCollection() throws InterruptedException {
-        robotSetup.getRightCollectionMotor().setPower(COLLECTION_MOTOR_SPEED);
-        robotSetup.getLeftCollectionMotor().setPower(-COLLECTION_MOTOR_SPEED);
+    void setCollectionMode(boolean running) throws InterruptedException {
+        if (running) {
+            robotSetup.getRightCollectionMotor().setPower(COLLECTION_MOTOR_SPEED);
+            robotSetup.getLeftCollectionMotor().setPower(COLLECTION_MOTOR_SPEED);
 
-        wait(1000);
+            return;
+        }
 
         robotSetup.getRightCollectionMotor().setPower(0);
         robotSetup.getLeftCollectionMotor().setPower(0);
+    }
+
+    void toggleFoundation() {
+        if (foundationPosition == FoundationPosition.TOP) {
+            robotSetup.getRightFoundationServo().setPosition(RIGHT_FOUNDATION_SERVO_DOWN);
+            robotSetup.getLeftFoundationServo().setPosition(LEFT_FOUNDATION_SERVO_DOWN);
+            foundationPosition = FoundationPosition.BOTTOM;
+
+            return;
+        }
+
+        robotSetup.getRightFoundationServo().setPosition(RIGHT_FOUNDATION_SERVO_UP);
+        robotSetup.getLeftFoundationServo().setPosition(LEFT_FOUNDATION_SERVO_UP);
+        foundationPosition = FoundationPosition.TOP;
     }
 
     double getCurrentHeight() { return currentHeight; }
@@ -265,4 +296,9 @@ enum LiftDiection {
     UP,
     DOWN,
     STOP
+}
+
+enum FoundationPosition {
+    TOP,
+    BOTTOM
 }
