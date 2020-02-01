@@ -38,7 +38,8 @@ class CollectionController {
      * The speed of the arm when moving both up and down, regardless of the distance to travel.
      * Positive should represent winding up the string, therefore moving the arm up, negative down.
      */
-    private static final double ARM_MOTION_SPEED = 0.2;
+    private static final double ARM_UP_MOTION_SPEED = 0.8;
+    private static final double ARM_DOWN_MOTION_SPEED = -0.4;
 
     /**
      * Ticks in the encoder of the motor raising and lowering the arm
@@ -66,28 +67,28 @@ class CollectionController {
      * which the stone is a standard length away from the robot and also a standard
      * height in relation to how much the arm was risen
      */
-    private static final double STANDARD_ARM_UP_ANGLE = 0.6;
+    private static final double STANDARD_ARM_UP_ANGLE = 0.75;
 
     /**
      * Angle in which the arm is in a standard down position ready to pick up a stone
      */
-    private static final double STANDARD_ARM_DOWN_ANGLE = 1.0; //FIXME: As above
+    private static final double STANDARD_ARM_DOWN_ANGLE = 0.88; //FIXME: As above
 
     /**
      * Position of the claw servo where it can pick up a stone
      */
-    private static final double OPEN_SERVO_POSITION = 0.4;
+    private static final double OPEN_SERVO_POSITION = 0.55;
 
     /**
      * Position of the claw servo where it's holding the stone with the lowest possible force
      */
     private static final double CLOSE_SERVO_POSITION = 0.75;
 
-    private static final double LEFT_FOUNDATION_SERVO_UP = 0.1;
-    private static final double LEFT_FOUNDATION_SERVO_DOWN = 0.44;
+    private static final double LEFT_FOUNDATION_SERVO_UP = 1.0;
+    private static final double LEFT_FOUNDATION_SERVO_DOWN = 0.62;
 
-    private static final double RIGHT_FOUNDATION_SERVO_UP = 1.0;
-    private static final double RIGHT_FOUNDATION_SERVO_DOWN = 0.66;
+    private static final double RIGHT_FOUNDATION_SERVO_UP = 0.16;
+    private static final double RIGHT_FOUNDATION_SERVO_DOWN = 0.56;
 
     /**
      * Speed of the collection mechanism //FIXME: ensure this isn't too fast
@@ -103,16 +104,17 @@ class CollectionController {
 
     private boolean aPressed = false;
     private boolean isStopped = false;
+    private boolean rtPressed = false;
 
     void gamepadHandler(Gamepad gamepad, Telemetry telemetry) throws InterruptedException {
         if (gamepad.dpad_up) {
-            runArm(LiftDiection.UP);
+            runLift(LiftDiection.UP);
             isStopped = false;
         } else if (gamepad.dpad_down) {
-            runArm(LiftDiection.DOWN);
+            runLift(LiftDiection.DOWN);
             isStopped = false;
         } else if (!isStopped) {
-            runArm(LiftDiection.STOP);
+            runLift(LiftDiection.STOP);
             isStopped = true;
         }
 
@@ -126,12 +128,21 @@ class CollectionController {
         if (gamepad.x) closeClaw();
         else if (gamepad.b) openClaw();
 
-        if (gamepad.right_trigger > 0.5) setCollectionMode(true); else setCollectionMode(false);
+        collect(gamepad.left_trigger, gamepad.right_trigger);
+
+//        if (gamepad.left_trigger > 0.5) setCollectionMode(true, true);
+//        else if (gamepad.right_trigger > 0.5) setCollectionMode(true, false);
+//        else setCollectionMode(false);
 
         if (gamepad.dpad_left) rotateArm(ArmDirection.FORWARD);
         if (gamepad.dpad_right) rotateArm(ArmDirection.BOTTOM);
 
-        if (gamepad.right_bumper) toggleFoundation();
+        if (gamepad.right_bumper) {
+            if (!rtPressed) {
+                toggleFoundation();
+                rtPressed = true;
+            }
+        } else rtPressed = false;
 
         telemetry.addData("Touch: ", getRobotSetup().getArmTouchSensor().isPressed());
         telemetry.addData("Dir: ", getRobotSetup().getArmMotor().getDirection());
@@ -142,22 +153,25 @@ class CollectionController {
         telemetry.update();
     }
 
-    void runArm(LiftDiection d) {
+    void runLift(LiftDiection d) {
+
+        if (robotSetup.getArmTouchSensor().isPressed() && d == LiftDiection.DOWN) d = LiftDiection.STOP;
+
         switch (d) {
             case UP:
                 robotSetup.getArmMotor().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robotSetup.getArmMotor().setPower(ARM_MOTION_SPEED);
+                robotSetup.getArmMotor().setPower(ARM_UP_MOTION_SPEED);
                 break;
             case DOWN:
                 robotSetup.getArmMotor().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robotSetup.getArmMotor().setPower(-ARM_MOTION_SPEED);
+                robotSetup.getArmMotor().setPower(ARM_DOWN_MOTION_SPEED);
                 break;
             case STOP:
                 robotSetup.getArmMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 robotSetup.getArmMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robotSetup.getArmMotor().setTargetPosition(0);
                 robotSetup.getArmMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robotSetup.getArmMotor().setPower(ARM_MOTION_SPEED);
+                robotSetup.getArmMotor().setPower(0.1);
                 break;
         }
     }
@@ -173,7 +187,7 @@ class CollectionController {
 
         robotSetup.getArmMotor().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robotSetup.getArmMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robotSetup.getArmMotor().setPower(-ARM_MOTION_SPEED);
+        robotSetup.getArmMotor().setPower(ARM_DOWN_MOTION_SPEED);
         while (!robotSetup.getArmTouchSensor().isPressed());
         robotSetup.getArmMotor().setPower(0);
         robotSetup.getArmMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -202,7 +216,7 @@ class CollectionController {
 
         final int ticks = calculateTicksToRaiseByDistance(MAXIMUM_ARM_HEIGHT - currentHeight);
 
-        Utils.encoderMotorRun(robotSetup.getArmMotor(), ticks, ARM_MOTION_SPEED);
+        Utils.encoderMotorRun(robotSetup.getArmMotor(), ticks, ARM_UP_MOTION_SPEED);
 
         currentHeight = MAXIMUM_ARM_HEIGHT;
     }
@@ -222,7 +236,7 @@ class CollectionController {
         final double raiseDistance = targetHeight - currentHeight;
         final int ticks = calculateTicksToRaiseByDistance(raiseDistance);
 
-        Utils.encoderMotorRun(robotSetup.getArmMotor(), ticks, ticks > 0 ? ARM_MOTION_SPEED : -ARM_MOTION_SPEED);
+        Utils.encoderMotorRun(robotSetup.getArmMotor(), ticks, ticks > 0 ? ARM_UP_MOTION_SPEED : -ARM_DOWN_MOTION_SPEED);
 
         currentHeight = targetHeight;
     }
@@ -256,16 +270,39 @@ class CollectionController {
         robotSetup.getArmServo().setPosition(STANDARD_ARM_UP_ANGLE);
     }
 
-    void setCollectionMode(boolean running) throws InterruptedException {
-        if (running) {
-            robotSetup.getRightCollectionMotor().setPower(COLLECTION_MOTOR_SPEED);
-            robotSetup.getLeftCollectionMotor().setPower(COLLECTION_MOTOR_SPEED);
+//    void setCollectionMode(boolean running) {
+//        setCollectionMode(running, false);
+//    }
+
+//    void setCollectionMode(boolean running, boolean cannon) {
+//        if (running) {
+//            robotSetup.getRightCollectionMotor().setPower(cannon ? 1.0 : COLLECTION_MOTOR_SPEED);
+//            robotSetup.getLeftCollectionMotor().setPower(cannon ? 1.0 : COLLECTION_MOTOR_SPEED);
+//
+//            return;
+//        }
+//
+//        robotSetup.getRightCollectionMotor().setPower(0);
+//        robotSetup.getLeftCollectionMotor().setPower(0);
+//    }
+
+    void collect(double left, double right) {
+        if (right > 0) {
+            robotSetup.getRightCollectionMotor().setPower(right);
+            robotSetup.getLeftCollectionMotor().setPower(right);
 
             return;
         }
 
-        robotSetup.getRightCollectionMotor().setPower(0);
-        robotSetup.getLeftCollectionMotor().setPower(0);
+        if (left > 0) {
+            robotSetup.getRightCollectionMotor().setPower(-COLLECTION_MOTOR_SPEED);
+            robotSetup.getLeftCollectionMotor().setPower(-COLLECTION_MOTOR_SPEED);
+
+            return;
+        }
+
+        robotSetup.getRightCollectionMotor().setPower(0.0);
+        robotSetup.getLeftCollectionMotor().setPower(0.0);
     }
 
     void toggleFoundation() {
