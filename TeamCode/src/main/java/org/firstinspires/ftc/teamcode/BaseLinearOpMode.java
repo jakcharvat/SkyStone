@@ -29,7 +29,7 @@ abstract class BaseLinearOpMode extends LinearOpMode {
         setPowerOn(turn, -turn, 0);
     }
 
-    private void setPowerOn(double left, double right, double perpendicular) {
+    void setPowerOn(double left, double right, double perpendicular) {
 
         left = Range.clip(left, -1.0, 1.0);
         right = Range.clip(right, -1.0, 1.0);
@@ -42,7 +42,7 @@ abstract class BaseLinearOpMode extends LinearOpMode {
         robotSetup.getPerpendicularMotor().setPower(perpendicular);
     }
 
-    abstract void opModeCycle() throws InterruptedException;
+    abstract void opModeCycle() throws InterruptedException, Exception;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -50,6 +50,10 @@ abstract class BaseLinearOpMode extends LinearOpMode {
         robotSetup = new RobotSetup(hardwareMap);
 
         /// Run the user code
-        opModeCycle();
+        try {
+            opModeCycle();
+        } catch (Exception e) {
+            throw new InterruptedException();
+        }
     }
 }

@@ -1,6 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("StatementWithEmptyBody")
 abstract class AutoLinearOpMode extends TeleLinearOpMode {
@@ -26,6 +31,53 @@ abstract class AutoLinearOpMode extends TeleLinearOpMode {
         stopMotion();
     }
 
+    protected  void turn(final double power, final double forRotations, final TurnDirection direction) {
+        double leftRotations = Math.abs(forRotations);
+        double rightRotations = Math.abs(forRotations);
+
+
+        if (power < 0) {
+            leftRotations = -leftRotations;
+            rightRotations = -rightRotations;
+        }
+
+        double leftPower = power;
+        double rightPower = power;
+
+        if (direction == TurnDirection.left) {
+            leftRotations = -leftRotations;
+            leftPower = -leftPower;
+        } else {
+            rightRotations = -rightRotations;
+            rightPower = -rightPower;
+        }
+
+
+        setupMotorEncoder(robotSetup.getLeftFrontMotor(), leftRotations);
+        setupMotorEncoder(robotSetup.getLeftBackMotor(), leftRotations);
+        setupMotorEncoder(robotSetup.getRightFrontMotor(), rightRotations);
+        setupMotorEncoder(robotSetup.getRightBackMotor(), rightRotations);
+
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+
+        setPowerOn(leftPower, rightPower, 0.0);
+
+        while (robotSetup.getLeftFrontMotor().isBusy() ||
+                robotSetup.getLeftBackMotor().isBusy() ||
+                robotSetup.getRightFrontMotor().isBusy() ||
+                robotSetup.getRightBackMotor().isBusy()) {
+            if (timer.time(TimeUnit.SECONDS) > 2.0) break;
+        }
+
+        stopMotion();
+
+        returnMotorEncoder(robotSetup.getLeftFrontMotor());
+        returnMotorEncoder(robotSetup.getLeftBackMotor());
+        returnMotorEncoder(robotSetup.getRightFrontMotor());
+        returnMotorEncoder(robotSetup.getRightBackMotor());
+    }
+
     protected void straight(final double power, double forRotations) {
 
         forRotations = Math.abs(forRotations);
@@ -44,7 +96,10 @@ abstract class AutoLinearOpMode extends TeleLinearOpMode {
         while (robotSetup.getLeftFrontMotor().isBusy() ||
                 robotSetup.getLeftBackMotor().isBusy() ||
                 robotSetup.getRightFrontMotor().isBusy() ||
-                robotSetup.getRightBackMotor().isBusy());
+                robotSetup.getRightBackMotor().isBusy()) {
+            telemetry.addData("Distance: ", robotSetup.getRightDistanceSensor().getDistance(DistanceUnit.CM));
+            telemetry.update();
+        }
 
         stopMotion();
 
@@ -67,4 +122,9 @@ abstract class AutoLinearOpMode extends TeleLinearOpMode {
     private void returnMotorEncoder(final DcMotor motor) {
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+}
+
+enum TurnDirection {
+    left,
+    right,
 }

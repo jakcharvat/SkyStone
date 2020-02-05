@@ -17,7 +17,7 @@ abstract class TeleLinearOpMode extends BaseLinearOpMode {
     }
 
     void gamepadDrive(Gamepad gamepad) {
-        double x = gamepad.left_stick_x, y = gamepad.right_stick_y, turn = normalizeTurn(gamepad.right_stick_x);
+        double x = gamepad.left_stick_x, y = -gamepad.right_stick_y, turn = normalizeTurn(gamepad.right_stick_x);
 
         if (turn != 0) {
             setTurnPower(turn);

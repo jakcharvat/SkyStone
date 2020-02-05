@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -15,6 +17,12 @@ public class RobotSetup {
     private DcMotor leftBackMotor;
     private DcMotor rightBackMotor;
     private DcMotor perpendicularMotor;
+
+    private ColorSensor leftColorSensor;
+    private ColorSensor rightColorSensor;
+    private DistanceSensor leftDistanceSensor;
+    private DistanceSensor rightDistanceSensor;
+    private ColorSensor color;
     //endregion
 
     //region Arm
@@ -27,8 +35,7 @@ public class RobotSetup {
     //region Collection
     private DcMotor rightCollectionMotor;
     private DcMotor leftCollectionMotor;
-    private Servo rightCollectionServo;
-    private Servo leftCollectionServo;
+    private Servo collectionServo;
     private Servo rightFoundationServo;
     private Servo leftFoundationServo;
     //endregion
@@ -57,8 +64,16 @@ public class RobotSetup {
         rightBackMotor = hardwareMap.dcMotor.get("rightBackMotor");
         perpendicularMotor = hardwareMap.dcMotor.get("perpendicularMotor");
 
-        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftColorSensor = hardwareMap.colorSensor.get("leftColor");
+        rightColorSensor = hardwareMap.colorSensor.get("rightColor");
+
+        leftDistanceSensor = hardwareMap.get(DistanceSensor.class, "leftColor");
+        rightDistanceSensor = hardwareMap.get(DistanceSensor.class, "rightColor");
+
+        color = hardwareMap.colorSensor.get("bottomColor");
     }
 
     /**
@@ -80,8 +95,7 @@ public class RobotSetup {
 
         rightCollectionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        rightCollectionServo = hardwareMap.servo.get("rightCollectionServo");
-        leftCollectionServo = hardwareMap.servo.get("leftCollectionServo");
+        collectionServo = hardwareMap.servo.get("rightCollectionServo");
         rightFoundationServo = hardwareMap.servo.get("rightFoundationServo");
         leftFoundationServo = hardwareMap.servo.get("leftFoundationServo");
     }
@@ -104,8 +118,17 @@ public class RobotSetup {
 
     DcMotor getRightCollectionMotor() { return rightCollectionMotor; }
     DcMotor getLeftCollectionMotor() { return leftCollectionMotor; }
-    Servo getRightCollectionServo() { return rightCollectionServo; }
-    Servo getLeftCollectionServo() { return leftCollectionServo; }
+    Servo getCollectionServo() { return collectionServo; }
     Servo getRightFoundationServo() { return rightFoundationServo; }
     Servo getLeftFoundationServo() { return leftFoundationServo; }
+
+    ColorSensor getLeftColorSensor() {
+        return leftColorSensor;
+    }
+    ColorSensor getRightColorSensor() { return rightColorSensor; }
+    ColorSensor getBottomColorSensor() { return color; }
+
+    DistanceSensor getLeftDistanceSensor() { return leftDistanceSensor; }
+    DistanceSensor getRightDistanceSensor() { return rightDistanceSensor; }
+
 }

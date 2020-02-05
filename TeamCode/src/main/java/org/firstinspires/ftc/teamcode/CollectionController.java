@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@SuppressWarnings("StatementWithEmptyBody")
+@SuppressWarnings("ALL")
 class CollectionController {
 
     /**
@@ -69,6 +71,10 @@ class CollectionController {
      */
     private static final double STANDARD_ARM_UP_ANGLE = 0.75;
 
+    private static final double STANDARD_ARM_COLLECTION_ANGLE = 0.84;
+
+    private static final double STANDARD_ARM_SECOND_BRICK_ANGLE = 0.8;
+
     /**
      * Angle in which the arm is in a standard down position ready to pick up a stone
      */
@@ -82,13 +88,13 @@ class CollectionController {
     /**
      * Position of the claw servo where it's holding the stone with the lowest possible force
      */
-    private static final double CLOSE_SERVO_POSITION = 0.75;
+    private static final double CLOSE_SERVO_POSITION = 0.7;
 
-    private static final double LEFT_FOUNDATION_SERVO_UP = 1.0;
-    private static final double LEFT_FOUNDATION_SERVO_DOWN = 0.62;
+    private static final double LEFT_FOUNDATION_SERVO_UP = 0.8;
+    private static final double LEFT_FOUNDATION_SERVO_DOWN = 0.44;
 
-    private static final double RIGHT_FOUNDATION_SERVO_UP = 0.16;
-    private static final double RIGHT_FOUNDATION_SERVO_DOWN = 0.56;
+    private static final double RIGHT_FOUNDATION_SERVO_UP = 0.44;
+    private static final double RIGHT_FOUNDATION_SERVO_DOWN = 0.85;
 
     /**
      * Speed of the collection mechanism //FIXME: ensure this isn't too fast
@@ -100,11 +106,15 @@ class CollectionController {
      * two positions or to the very top
      */
     private double currentHeight = 0.0;
-    private FoundationPosition foundationPosition = FoundationPosition.TOP;
+    private LoweredFoundation loweredFoundation = LoweredFoundation.NONE;
 
     private boolean aPressed = false;
+    private boolean bPressed = false;
     private boolean isStopped = false;
-    private boolean rtPressed = false;
+    private boolean rbPressed = false;
+    private boolean lbPressed = false;
+    private boolean xPressed = false;
+    private boolean rdpPressed = false;
 
     void gamepadHandler(Gamepad gamepad, Telemetry telemetry) throws InterruptedException {
         if (gamepad.dpad_up) {
@@ -121,12 +131,23 @@ class CollectionController {
         if (gamepad.a) {
             if (aPressed) return;
 
-            lowerArmToBottom();
+            lowerArmToBottom(gamepad, false);
             aPressed = true;
         } else aPressed = false;
 
-        if (gamepad.x) closeClaw();
-        else if (gamepad.b) openClaw();
+        if (gamepad.b) {
+            if (bPressed) return;
+
+            toggleClaw();
+            bPressed = true;
+        } else bPressed = false;
+
+        if (gamepad.x) {
+            if (xPressed) return;
+
+            rotateArm(ArmDirection.PLACE_SECOND);
+            xPressed = true;
+        } else xPressed = false;
 
         collect(gamepad.left_trigger, gamepad.right_trigger);
 
@@ -135,14 +156,26 @@ class CollectionController {
 //        else setCollectionMode(false);
 
         if (gamepad.dpad_left) rotateArm(ArmDirection.FORWARD);
-        if (gamepad.dpad_right) rotateArm(ArmDirection.BOTTOM);
+        if (gamepad.dpad_right) {
+            if (rdpPressed) return;
+
+            collectBrick(gamepad);
+            rdpPressed = true;
+        } else rdpPressed = false;
 
         if (gamepad.right_bumper) {
-            if (!rtPressed) {
-                toggleFoundation();
-                rtPressed = true;
+            if (!rbPressed) {
+                toggleFoundation(FoundationSide.RIGHT);
+                rbPressed = true;
             }
-        } else rtPressed = false;
+        } else rbPressed = false;
+
+        if (gamepad.left_bumper) {
+            if (!lbPressed) {
+                toggleFoundation(FoundationSide.LEFT);
+                lbPressed = true;
+            }
+        } else lbPressed = false;
 
         telemetry.addData("Touch: ", getRobotSetup().getArmTouchSensor().isPressed());
         telemetry.addData("Dir: ", getRobotSetup().getArmMotor().getDirection());
@@ -176,31 +209,57 @@ class CollectionController {
         }
     }
 
+    void lowerArmToBottom(Gamepad gamepad) {
+        lowerArmToBottom(gamepad, true);
+    }
+
     /**
      * Lower the arm to the very bottom. Uses the touch sensor to ensure the arm is always in the exact
      * same position after this method
      */
-    void lowerArmToBottom() {
+    void lowerArmToBottom(Gamepad gamepad, boolean openFirst) {
+        boolean aPressed = gamepad.a;
+
+        rotateArm(ArmDirection.COLLECT);
+
+        if (openFirst) toggleClaw(true);
 
         /// If the touch sensor is already pressed stop the execution of the method
-        if (robotSetup.getArmTouchSensor().isPressed()) return;
+        if (robotSetup.getArmTouchSensor().isPressed()) {
+            if (!openFirst) toggleClaw(true);
+            return;
+        }
 
         robotSetup.getArmMotor().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robotSetup.getArmMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotSetup.getArmMotor().setPower(ARM_DOWN_MOTION_SPEED);
-        while (!robotSetup.getArmTouchSensor().isPressed());
+        while (!robotSetup.getArmTouchSensor().isPressed()) {
+            if (gamepad.a && !aPressed) {
+                robotSetup.getArmMotor().setPower(0);
+                robotSetup.getArmMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                return;
+            }
+            if (!gamepad.a) aPressed = false;
+        }
         robotSetup.getArmMotor().setPower(0);
         robotSetup.getArmMotor().setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        if (!openFirst) toggleClaw(true);
 
         currentHeight = 0.0;
     }
 
-    void openClaw() {
-        robotSetup.getClawServo().setPosition(OPEN_SERVO_POSITION);
+    void toggleClaw() {
+        toggleClaw(false);
     }
 
-    void closeClaw() {
-        robotSetup.getClawServo().setPosition(CLOSE_SERVO_POSITION);
+    void toggleClaw(boolean onlyOpen) {
+        if (robotSetup.getClawServo().getPosition() == OPEN_SERVO_POSITION && !onlyOpen) {
+            robotSetup.getClawServo().setPosition(CLOSE_SERVO_POSITION);
+            return;
+        }
+
+        robotSetup.getClawServo().setPosition(OPEN_SERVO_POSITION);
     }
 
     /**
@@ -210,9 +269,9 @@ class CollectionController {
      *                   Might increase the precision of driving to the top
 //     * @see MAXIMUM_ARM_HEIGHT
      */
-    void raiseArmToTop(boolean lowerFirst) {
+    void raiseArmToTop(boolean lowerFirst, Gamepad gamepad) {
 
-        if (lowerFirst) lowerArmToBottom();
+        if (lowerFirst) lowerArmToBottom(gamepad);
 
         final int ticks = calculateTicksToRaiseByDistance(MAXIMUM_ARM_HEIGHT - currentHeight);
 
@@ -229,9 +288,11 @@ class CollectionController {
      * @param lowerFirst Whether the arm should be first lowered to the very bottom before being raised.
      *                   Might increase the precision of driving to the top
      */
-    void runArmToHeight(double targetHeight, boolean lowerFirst) {
+    void runArmToHeight(double targetHeight, boolean lowerFirst, Gamepad gamepad) {
 
-        if (lowerFirst) lowerArmToBottom();
+        targetHeight = Range.clip(targetHeight, 0, MAXIMUM_ARM_HEIGHT);
+
+        if (lowerFirst) lowerArmToBottom(gamepad);
 
         final double raiseDistance = targetHeight - currentHeight;
         final int ticks = calculateTicksToRaiseByDistance(raiseDistance);
@@ -242,8 +303,8 @@ class CollectionController {
     }
 
     /// Workaround for Java not supporting optional parameters with default values
-    void runArmToHeight(double targetHeight) {
-        runArmToHeight(targetHeight, false);
+    void runArmToHeight(double targetHeight, Gamepad gamepad) {
+        runArmToHeight(targetHeight, false, gamepad);
     }
 
     /**
@@ -262,8 +323,17 @@ class CollectionController {
     }
 
     void rotateArm(ArmDirection d) {
+        if (d == ArmDirection.PLACE_SECOND) {
+            robotSetup.getArmServo().setPosition(STANDARD_ARM_SECOND_BRICK_ANGLE);
+        }
+
         if (d == ArmDirection.BOTTOM) {
             robotSetup.getArmServo().setPosition(STANDARD_ARM_DOWN_ANGLE);
+            return;
+        }
+
+        if (d == ArmDirection.COLLECT) {
+            robotSetup.getArmServo().setPosition(STANDARD_ARM_COLLECTION_ANGLE);
             return;
         }
 
@@ -305,18 +375,36 @@ class CollectionController {
         robotSetup.getLeftCollectionMotor().setPower(0.0);
     }
 
-    void toggleFoundation() {
-        if (foundationPosition == FoundationPosition.TOP) {
-            robotSetup.getRightFoundationServo().setPosition(RIGHT_FOUNDATION_SERVO_DOWN);
-            robotSetup.getLeftFoundationServo().setPosition(LEFT_FOUNDATION_SERVO_DOWN);
-            foundationPosition = FoundationPosition.BOTTOM;
+    void collectBrick(Gamepad gamepad) {
+        lowerArmToBottom(gamepad);
+        toggleClaw();
+        rotateArm(ArmDirection.FORWARD);
+    }
+
+    void toggleFoundation(FoundationSide side) {
+        if (side == FoundationSide.LEFT) {
+            robotSetup.getRightFoundationServo().setPosition(RIGHT_FOUNDATION_SERVO_UP);
+
+            if (loweredFoundation == LoweredFoundation.LEFT) {
+                robotSetup.getLeftFoundationServo().setPosition(LEFT_FOUNDATION_SERVO_UP);
+                loweredFoundation = LoweredFoundation.NONE;
+            } else {
+                robotSetup.getLeftFoundationServo().setPosition(LEFT_FOUNDATION_SERVO_DOWN);
+                loweredFoundation = LoweredFoundation.LEFT;
+            }
 
             return;
         }
 
-        robotSetup.getRightFoundationServo().setPosition(RIGHT_FOUNDATION_SERVO_UP);
         robotSetup.getLeftFoundationServo().setPosition(LEFT_FOUNDATION_SERVO_UP);
-        foundationPosition = FoundationPosition.TOP;
+
+        if (loweredFoundation == LoweredFoundation.RIGHT) {
+            robotSetup.getRightFoundationServo().setPosition(RIGHT_FOUNDATION_SERVO_UP);
+            loweredFoundation = LoweredFoundation.NONE;
+        } else {
+            robotSetup.getRightFoundationServo().setPosition(RIGHT_FOUNDATION_SERVO_DOWN);
+            loweredFoundation = LoweredFoundation.RIGHT;
+        }
     }
 
     double getCurrentHeight() { return currentHeight; }
@@ -326,7 +414,9 @@ class CollectionController {
 
 enum ArmDirection {
     BOTTOM,
-    FORWARD
+    FORWARD,
+    COLLECT,
+    PLACE_SECOND
 }
 
 enum LiftDiection {
@@ -335,7 +425,13 @@ enum LiftDiection {
     STOP
 }
 
-enum FoundationPosition {
-    TOP,
-    BOTTOM
+enum LoweredFoundation {
+    LEFT,
+    RIGHT,
+    NONE
+}
+
+enum FoundationSide {
+    RIGHT,
+    LEFT
 }
