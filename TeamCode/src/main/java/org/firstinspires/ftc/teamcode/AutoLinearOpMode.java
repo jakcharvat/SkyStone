@@ -31,7 +31,7 @@ abstract class AutoLinearOpMode extends TeleLinearOpMode {
         stopMotion();
     }
 
-    protected  void turn(final double power, final double forRotations, final TurnDirection direction) {
+    protected  void turn(final double power, final double forRotations, final TurnDirection direction, final double time) {
         double leftRotations = Math.abs(forRotations);
         double rightRotations = Math.abs(forRotations);
 
@@ -67,7 +67,7 @@ abstract class AutoLinearOpMode extends TeleLinearOpMode {
                 robotSetup.getLeftBackMotor().isBusy() ||
                 robotSetup.getRightFrontMotor().isBusy() ||
                 robotSetup.getRightBackMotor().isBusy()) {
-            if (timer.time(TimeUnit.SECONDS) > 2.0) break;
+            if (timer.time(TimeUnit.SECONDS) > time) break;
         }
 
         stopMotion();
@@ -78,7 +78,7 @@ abstract class AutoLinearOpMode extends TeleLinearOpMode {
         returnMotorEncoder(robotSetup.getRightBackMotor());
     }
 
-    protected void straight(final double power, double forRotations) {
+    protected void straight(final double power, double forRotations, double time) {
 
         forRotations = Math.abs(forRotations);
 
@@ -93,12 +93,19 @@ abstract class AutoLinearOpMode extends TeleLinearOpMode {
 
         straight(power);
 
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+
         while (robotSetup.getLeftFrontMotor().isBusy() ||
                 robotSetup.getLeftBackMotor().isBusy() ||
                 robotSetup.getRightFrontMotor().isBusy() ||
                 robotSetup.getRightBackMotor().isBusy()) {
             telemetry.addData("Distance: ", robotSetup.getRightDistanceSensor().getDistance(DistanceUnit.CM));
             telemetry.update();
+
+            if (timer.time(TimeUnit.SECONDS) > time) {
+                break;
+            }
         }
 
         stopMotion();

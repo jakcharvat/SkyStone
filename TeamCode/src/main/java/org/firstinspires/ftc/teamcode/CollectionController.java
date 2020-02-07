@@ -78,22 +78,22 @@ class CollectionController {
     /**
      * Angle in which the arm is in a standard down position ready to pick up a stone
      */
-    private static final double STANDARD_ARM_DOWN_ANGLE = 0.88; //FIXME: As above
+    private static final double STANDARD_ARM_DOWN_ANGLE = 0.88;
 
     /**
      * Position of the claw servo where it can pick up a stone
      */
-    private static final double OPEN_SERVO_POSITION = 0.55;
+    private static final double OPEN_SERVO_POSITION = 0.4;
 
     /**
      * Position of the claw servo where it's holding the stone with the lowest possible force
      */
     private static final double CLOSE_SERVO_POSITION = 0.7;
 
-    private static final double LEFT_FOUNDATION_SERVO_UP = 0.8;
-    private static final double LEFT_FOUNDATION_SERVO_DOWN = 0.44;
+    private static final double LEFT_FOUNDATION_SERVO_UP = 0.75;
+    private static final double LEFT_FOUNDATION_SERVO_DOWN = 0.38;
 
-    private static final double RIGHT_FOUNDATION_SERVO_UP = 0.44;
+    private static final double RIGHT_FOUNDATION_SERVO_UP = 0.46;
     private static final double RIGHT_FOUNDATION_SERVO_DOWN = 0.85;
 
     /**
@@ -116,15 +116,19 @@ class CollectionController {
     private boolean xPressed = false;
     private boolean rdpPressed = false;
 
+    private int counter = 0;
+
+    private boolean isClawClosed = false;
+
     void gamepadHandler(Gamepad gamepad, Telemetry telemetry) throws InterruptedException {
         if (gamepad.dpad_up) {
-            runLift(LiftDiection.UP);
+            runLift(LiftDiection.UP, gamepad);
             isStopped = false;
         } else if (gamepad.dpad_down) {
-            runLift(LiftDiection.DOWN);
+            runLift(LiftDiection.DOWN, gamepad);
             isStopped = false;
         } else if (!isStopped) {
-            runLift(LiftDiection.STOP);
+            runLift(LiftDiection.STOP, gamepad);
             isStopped = true;
         }
 
@@ -136,7 +140,10 @@ class CollectionController {
         } else aPressed = false;
 
         if (gamepad.b) {
+
             if (bPressed) return;
+
+            counter += 1;
 
             toggleClaw();
             bPressed = true;
@@ -177,6 +184,7 @@ class CollectionController {
             }
         } else lbPressed = false;
 
+        telemetry.addData("B Counter", counter);
         telemetry.addData("Touch: ", getRobotSetup().getArmTouchSensor().isPressed());
         telemetry.addData("Dir: ", getRobotSetup().getArmMotor().getDirection());
         telemetry.addData("Height: ", getCurrentHeight());
@@ -186,18 +194,18 @@ class CollectionController {
         telemetry.update();
     }
 
-    void runLift(LiftDiection d) {
+    void runLift(LiftDiection d, Gamepad gamepad) {
 
         if (robotSetup.getArmTouchSensor().isPressed() && d == LiftDiection.DOWN) d = LiftDiection.STOP;
 
         switch (d) {
             case UP:
                 robotSetup.getArmMotor().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robotSetup.getArmMotor().setPower(ARM_UP_MOTION_SPEED);
+                robotSetup.getArmMotor().setPower(gamepad.y ? ARM_UP_MOTION_SPEED / 2 : ARM_UP_MOTION_SPEED);
                 break;
             case DOWN:
                 robotSetup.getArmMotor().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robotSetup.getArmMotor().setPower(ARM_DOWN_MOTION_SPEED);
+                robotSetup.getArmMotor().setPower(gamepad.y ? ARM_DOWN_MOTION_SPEED / 2 : ARM_DOWN_MOTION_SPEED);
                 break;
             case STOP:
                 robotSetup.getArmMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -254,12 +262,15 @@ class CollectionController {
     }
 
     void toggleClaw(boolean onlyOpen) {
-        if (robotSetup.getClawServo().getPosition() == OPEN_SERVO_POSITION && !onlyOpen) {
+        if (!isClawClosed && !onlyOpen) {
             robotSetup.getClawServo().setPosition(CLOSE_SERVO_POSITION);
+
+            isClawClosed = true;
             return;
         }
 
         robotSetup.getClawServo().setPosition(OPEN_SERVO_POSITION);
+        isClawClosed = false;
     }
 
     /**
@@ -322,17 +333,18 @@ class CollectionController {
         return (int) Math.round(ticks);
     }
 
-    void rotateArm(ArmDirection d) {
-        if (d == ArmDirection.PLACE_SECOND) {
+    void rotateArm(ArmDirection armDirection) {
+        if (armDirection == ArmDirection.PLACE_SECOND) {
             robotSetup.getArmServo().setPosition(STANDARD_ARM_SECOND_BRICK_ANGLE);
+            return;
         }
 
-        if (d == ArmDirection.BOTTOM) {
+        if (armDirection == ArmDirection.BOTTOM) {
             robotSetup.getArmServo().setPosition(STANDARD_ARM_DOWN_ANGLE);
             return;
         }
 
-        if (d == ArmDirection.COLLECT) {
+        if (armDirection == ArmDirection.COLLECT) {
             robotSetup.getArmServo().setPosition(STANDARD_ARM_COLLECTION_ANGLE);
             return;
         }

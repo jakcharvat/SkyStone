@@ -28,13 +28,14 @@ abstract class TeleLinearOpMode extends BaseLinearOpMode {
     }
 
     private double normalizeTurn(double t) {
+//        return t;
         t = Range.clip(t, -1, 1);
 
         if (t > 0) {
-            return Range.clip((t - 0.5) * 2, 0, 1);
+            return Range.clip((t - 0.3), 0, 1);
         }
 
-        return Range.clip((t + 0.5) * 2, -1, 0);
+        return Range.clip((t + 0.3), -1, 0);
     }
 
     /**
