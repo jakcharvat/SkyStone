@@ -27,7 +27,7 @@ public class AutonomousRed extends AutoLinearOpMode {
         telemetry.update();
 
 
-        straight(MOVE_SPEED, 2.1, 2.3);
+        straight(MOVE_SPEED, 2.0, 2.3);
 
         controller.runArmToHeight(12.0, false, gamepad1);
         controller.lowerArmToBottom(gamepad1);
