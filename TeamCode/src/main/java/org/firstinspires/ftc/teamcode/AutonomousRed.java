@@ -64,8 +64,10 @@ public class AutonomousRed extends AutoLinearOpMode {
 
         straight(MOVE_SPEED);
         while(robotSetup.getBottomColorSensor().red() < 500);
-        Thread.sleep(300);
+//        Thread.sleep(300);
         stopMotion();
+
+        straight(-0.1, 0.1, 0.5);
 
         while(opModeIsActive());
     }
