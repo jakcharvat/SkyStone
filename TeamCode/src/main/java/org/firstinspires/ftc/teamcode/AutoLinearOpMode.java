@@ -31,7 +31,7 @@ abstract class AutoLinearOpMode extends TeleLinearOpMode {
         stopMotion();
     }
 
-    protected  void turn(final double power, final double forRotations, final TurnDirection direction, final double time) {
+    protected void turn(final double power, final double forRotations, final TurnDirection direction, final double time) {
         double leftRotations = Math.abs(forRotations);
         double rightRotations = Math.abs(forRotations);
 
@@ -67,6 +67,7 @@ abstract class AutoLinearOpMode extends TeleLinearOpMode {
                 robotSetup.getLeftBackMotor().isBusy() ||
                 robotSetup.getRightFrontMotor().isBusy() ||
                 robotSetup.getRightBackMotor().isBusy()) {
+            if (isStopRequested()) break;
             if (timer.time(TimeUnit.SECONDS) > time) break;
         }
 
@@ -100,6 +101,7 @@ abstract class AutoLinearOpMode extends TeleLinearOpMode {
                 robotSetup.getLeftBackMotor().isBusy() ||
                 robotSetup.getRightFrontMotor().isBusy() ||
                 robotSetup.getRightBackMotor().isBusy()) {
+            if (isStopRequested()) break;
             telemetry.addData("Distance: ", robotSetup.getRightDistanceSensor().getDistance(DistanceUnit.CM));
             telemetry.update();
 
