@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 //Not edited for blue side
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
+@Disabled
 @Autonomous(name = "Optimize Autonomous Test Blue", group = "Competition")
 public class OptimizedAutonomousTestBlue extends AutoLinearOpMode {
 
